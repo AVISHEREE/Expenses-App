@@ -5,6 +5,46 @@ import {newUser ,
         deleteUser} from '../database/databaseFunctions/user.functions.js'
 import jwt from 'jsonwebtoken'
 
+
+let refreshTokens = [];
+const GenerateAccessAndRefreshToken = (user) =>{
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    let jwtRefreshSeretKey = process.env.JWT_REFRESH_SECRET_KEY;
+    let jwtExpiryToken = process.env.ACCESS_TOKEN_EXPIRY;
+    let accessToken = jwt.sign({user},jwtSecretKey,{expiresIn:jwtExpiryToken});
+    let refershToken = jwt.sign({user},jwtRefreshSeretKey);
+    return {accessToken,refershToken};
+
+}
+
+const refreshRefreshToken = (req,res)=>{
+    const refreshToken = req.body.token;
+    if(!refreshToken) return res.status(401).json("You are not authenticated");
+    if(!refreshTokens.includes(refreshToken)){
+        return res.status(403).json("refersh token is not verified");
+    }
+    jwt.verify(refreshToken,process.env.JWT_REFRESH_SECRET_KEY,(err,user)=>{
+        if (err) return res.status(403).json("Token is invalid");
+        refreshTokens = refreshTokens.filter(token=>token !== refreshToken);
+        const Token = GenerateAccessAndRefreshToken(user)
+        refreshTokens.push(Token.refershToken);
+        res
+        .status(200)
+        .json({
+            accessToken:Token.accessToken,
+            refreshToken:Token.refershToken
+        })
+    })
+}
+
+const logOut = (req,res)=>{
+    const refreshToken = req.body.token
+    refreshTokens = refreshTokens.filter(token => token !== refreshToken);
+    res
+    .status(200)
+    .json("logged out");
+}
+
 const userSignup = async (req,res) =>{
     const {email,password,name} = req.body;
     if((email && password && name) === ""){
@@ -41,16 +81,14 @@ const userSignin = async (req,res)=>{
     }
     else{
         const userData = await getUser(email,password);
-        let jwtSecretKey = process.env.JWT_SECRET_KEY;
-        let jwtExpiryToken = process.env.ACCESS_TOKEN_EXPIRY;
-        console.log(userData);
-        
-        const token = jwt.sign(userData,jwtSecretKey,{expiresIn:jwtExpiryToken});
+        const Token = GenerateAccessAndRefreshToken(userData.user_id);
+        refreshTokens.push(Token.refershToken);
         res
         .status(201)
         .json({
-            accessToken:token,
-            userDetails:userData
+            userDetails:userData,
+            accessToken:Token.accessToken,
+            refreshToken:Token.refershToken
         });
     }
 }
@@ -79,5 +117,7 @@ export {
     userSignup,
     userSignin,
     updateUserDetails,
-    deleteUserFromDb
+    deleteUserFromDb,
+    logOut,
+    refreshRefreshToken
 }
