@@ -1,10 +1,10 @@
-import './App.css'
-
-function App() {
-
+import './assets/styles/main.css'
+import React from 'react';
+import Navbar from './components/navbar.jsx';
+const App = () => {
   return (
     <>
-    <h1>Expenses App</h1>
+      <Navbar/>
     </>
   )
 }
