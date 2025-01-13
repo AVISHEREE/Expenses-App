@@ -1,93 +1,74 @@
 import React, { useState } from "react";
 
 const Navbar = () => {
-  // State to toggle input fields visibility
-  const [showInputFields, setShowInputFields] = useState(false);
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
-    <div className="bg-slate-700 text-white shadow-lg">
-      {/* Navbar container */}
-      <nav className="max-w-6xl mx-auto px-4 flex justify-between items-center h-16">
-        {/* Logo and Links */}
-        <div className="flex items-center space-x-8">
-          {/* Logo */}
-          <div className="text-2xl font-bold tracking-wide flex items-center space-x-2">
-            <span className="text-yellow-300 h-11 w-36"><img src="..\src\assets\images\EXALogo.png" alt="logo" /></span> {/* Expense app logo */}
-            {/* <span>ExpenseAssist</span> */}
-          </div>
-
-          {/* Links */}
-          <div className="hidden md:flex space-x-6">
-            <a href="#" className="font-semibold hover:text-yellow-300 transition">
-              Dashboard
-            </a>
-            <a href="#" className="font-semibold hover:text-yellow-300 transition">
-              Reports
-            </a>
-            <a href="#" className="font-semibold hover:text-yellow-300 transition">
-              Insights
-            </a>
-          </div>
-        </div>
-
-        {/* Toggle Button for Input Fields */}
-        <button
-          onClick={() => setShowInputFields(!showInputFields)}
-          className="bg-slate-700 text-white px-4 py-2 rounded-lg font-bold hover:bg-black transition"
-        >
-          {showInputFields ? "Hide Expense Form" : "Add Expense"}
+    <nav className="bg-child-bg-color max-[600px]:flex max-[600px]:items-start max-[600px]:p-3 max-[600px]:py-3   text-heading-color flex flex-col px-10 md:flex-row items-center justify-between mx-4 md:mx-20 mt-4 rounded-md py-4 drop-shadow-2xl font-chakra-petch">
+      {/* Left Section */}
+      <div className="hidden items-center space-x-4 md:flex">
+        {/* Insights Button */}
+        
+          <button className="flex items-center hover:text-gray-300 transition">
+          <span className="ml-2">Insights</span>
         </button>
-      </nav>
 
-      {/* Input Fields for Expenses */}
-      {showInputFields && (
-        <div className="bg-blue-100 text-gray-800 py-4 px-6 rounded-md max-w-6xl mx-auto shadow-md mt-4">
-          <h2 className="text-xl font-bold mb-4 text-blue-600">Add Expense</h2>
-          <form className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
-            {/* Amount */}
-            <input
-              type="number"
-              placeholder="Amount"
-              className="p-3 w-full md:w-1/4 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        {/* Center Line */}
+        <div className="hidden md:block w-px h-6 bg-gray-400"></div>
+
+        {/* Add Expense Button */}
+        <button className="hover:text-gray-300 transition">Add Expense</button>
+      </div>
+
+      {/* Center Section */}
+      <div className="text-center max-[600px]:mb-0 font-bold text-lg md:text-2xl tracking-wide mb-4 md:mb-0">
+        Expense Assist App
+      </div>
+
+      {/* Right Section */}
+      <div className="flex flex-col max-[640px]:hidden md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+        {/* Search Bar */}
+        <input
+          type="text"
+          placeholder="Search expenses"
+          className="bg-gray-800 text-white placeholder-gray-400 px-4 py-2 rounded w-full md:w-auto focus:outline-none focus:ring focus:ring-yellow-500"
+        />
+        <div className="hidden md:block w-px h-6 bg-gray-400"></div>
+        {/* Contact Button */}
+        <button className="hover:text-gray-300 transition">Contact</button>
+      </div>
+      <button
+          className="text-white focus:outline-none md:hidden"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <svg
+
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-6 h-6 absolute top-3.5 right-3 text-black"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 6h18M3 12h18m-6 6h6"
             />
-
-            {/* Date */}
-            <input
-              type="date"
-              className="p-3 w-full md:w-1/4 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-
-            {/* Type */}
-            <select
-              className="p-3 w-full md:w-1/4 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="" disabled selected>
-                Select Type
-              </option>
-              <option value="Food">Food</option>
-              <option value="Travel">Travel</option>
-              <option value="Shopping">Shopping</option>
-              <option value="Other">Other</option>
-            </select>
-
-            {/* Description */}
-            <input
-              type="text"
-              placeholder="Description"
-              className="p-3 w-full md:w-1/4 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="p-3 w-full md:w-1/4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition"
-            >
-              Add Expense
-            </button>
-          </form>
+          </svg>
+        </button>
+        {isMenuOpen && (
+        <div className="flex flex-col mt-2 space-y-4 md:hidden max-[640px]:mx-12">
+          <button className="hover:text-gray-300 transition">Insights</button>
+          <button className="hover:text-gray-300 transition">Add Expense</button>
+          <button className="hover:text-gray-300 transition">Contact</button>
+          <input
+            type="text"
+            placeholder="Search expenses"
+            className="bg-gray-800 text-white placeholder-gray-400 px-4 py-2 rounded focus:outline-none focus:ring focus:ring-yellow-500"
+          />
         </div>
-      )}
-    </div>
+      )} 
+    </nav>
   );
 };
 
