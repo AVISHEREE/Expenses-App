@@ -1,10 +1,21 @@
-import './assets/styles/main.css'
 import React from 'react';
-import Navbar from './components/navbar.jsx';
+import { Routes, Route } from 'react-router-dom';
+import Home from './components/home.jsx';
+import Profile from './components/profile.jsx';
+import SignUp from './components/signUp.jsx';
+import LogIn from './components/logIn.jsx';
+import PrivateComponent from './components/privateComponent.jsx';
 const App = () => {
   return (
     <>
-      <Navbar/>
+      <Routes>
+        <Route element={PrivateComponent}>
+        <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
+        </Route>
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<LogIn />} />
+      </Routes>
     </>
   )
 }

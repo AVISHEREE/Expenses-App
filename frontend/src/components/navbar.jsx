@@ -1,7 +1,17 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
+import { Link } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({page}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [TextInput, setTextInput] = useState("disabled");
+  useEffect(() => {
+    const auth = localStorage.getItem('user');
+    if(auth){
+      setTextInput("");
+      console.log("h");
+    }
+  }, [])
+  
   return (
     <nav className="bg-child-bg-color max-[600px]:flex max-[600px]:items-start max-[600px]:p-3 max-[600px]:py-3   text-heading-color flex flex-col px-10 md:flex-row items-center justify-between mx-4 md:mx-20 mt-4 rounded-md py-4 drop-shadow-2xl font-chakra-petch">
       {/* Left Section */}
@@ -30,11 +40,12 @@ const Navbar = () => {
         <input
           type="text"
           placeholder="Search expenses"
+          disabled={TextInput}
           className="bg-gray-800 text-white placeholder-gray-400 px-4 py-2 rounded w-full md:w-auto focus:outline-none focus:ring focus:ring-yellow-500"
         />
         <div className="hidden md:block w-px h-6 bg-gray-400"></div>
         {/* Contact Button */}
-        <button className="hover:text-gray-300 transition">Contact</button>
+        <Link className="hover:text-gray-300 transition" to={`/${page.route}`}>{page.name}</Link>
       </div>
       <button
           className="text-white focus:outline-none md:hidden"
@@ -60,10 +71,11 @@ const Navbar = () => {
         <div className="flex flex-col mt-2 space-y-4 md:hidden max-[640px]:mx-12">
           <button className="hover:text-gray-300 transition">Insights</button>
           <button className="hover:text-gray-300 transition">Add Expense</button>
-          <button className="hover:text-gray-300 transition">Contact</button>
+          <button><Link className="hover:text-gray-300 transition" to={`/${page.route}`}>{page.name}</Link></button>
           <input
             type="text"
             placeholder="Search expenses"
+            disabled={TextInput}
             className="bg-gray-800 text-white placeholder-gray-400 px-4 py-2 rounded focus:outline-none focus:ring focus:ring-yellow-500"
           />
         </div>
