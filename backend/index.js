@@ -3,9 +3,11 @@ import { userRoutes } from './router/user.router.js';
 import { expenseRouter } from './router/expense.router.js';
 import jwt from 'jsonwebtoken'
 import { refreshRefreshToken } from './controller/user.controller.js';
+import cors from 'cors'
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 
 app.get('/',(req,res)=>{
