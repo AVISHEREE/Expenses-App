@@ -1,7 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./navbar";
+import { useNavigate } from 'react-router-dom';
 
 const LogIn = () => {
+  const navigate = useNavigate();
+  const [Email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
+  // const [UserDetails, setUserDetails] = useState([]);
+  // const [AuthTokens, setAuthTokens] = useState([])
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:8080/v1/user/signin", {
+        method: "POST",
+        body: JSON.stringify({ email:Email, password:Password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      localStorage.setItem("userInfo",JSON.stringify(data.userDetails));
+      localStorage.setItem("accessToken",JSON.stringify(data.accessToken));
+      localStorage.setItem("refreshToken",JSON.stringify(data.refreshToken));
+      console.log("user logedin");
+      navigate('/');
+    } catch (err) {
+      console.log("Error in sending req, ", err);
+    }
+  };
   return (
     <>
       <Navbar page={{ name: "Create Account", route: "signup" }} />
@@ -10,16 +37,20 @@ const LogIn = () => {
           <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
             Login to Continue
           </h1>
-          <form className="grid gap-5">
+          <form className="grid gap-5" onSubmit={handleSubmit}>
             <input
               type="email"
-              placeholder="Enter your Email"
+              placeholder="Enter your Email or mobile"
+              onChange={(e) => setEmail(e.target.value)}
+              value={Email}
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
             <input
               type="password"
               placeholder="Enter your Password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={Password}
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
@@ -38,6 +69,11 @@ const LogIn = () => {
             >
               Sign up
             </a>
+            <p className="text-center text-sm text-gray-600 mt-4">
+              <button className="text-red-500 underline font-medium">
+                go with demo account
+              </button>
+            </p>
           </p>
         </div>
       </div>

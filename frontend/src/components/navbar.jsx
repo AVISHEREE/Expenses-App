@@ -5,10 +5,9 @@ const Navbar = ({page}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [TextInput, setTextInput] = useState("disabled");
   useEffect(() => {
-    const auth = localStorage.getItem('user');
+    const auth = localStorage.getItem('userInfo');
     if(auth){
       setTextInput("");
-      console.log("h");
     }
   }, [])
   

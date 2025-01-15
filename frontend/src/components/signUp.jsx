@@ -1,7 +1,8 @@
 import React from "react";
 import Navbar from "./navbar";
 
-const LogIn = () => {
+const SignUp = () => {
+  // const [first, setfirst] = useState(second)
   return (
     <>
       <Navbar page = {{name:'already have Account',route:'login'}}/>
@@ -39,11 +40,16 @@ const LogIn = () => {
               Login
             </a>
           </p>
+          <p className="text-center text-sm text-gray-600 mt-4">
+            <button className="text-red-500 underline font-medium">
+              go with demo account
+            </button>
+          </p>
         </div>
       </div>
     </>
   );
 };
 
-export default LogIn;
+export default SignUp;
 
