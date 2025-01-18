@@ -50,17 +50,21 @@ const userSignup = async (req,res) =>{
     if((email && password && name) === ""){
         res
         .status(400)
-        .send("please fill all values")
+        .json("please fill all values");
     }
     else{
         const isUser = await existingUserCheck(email);
         if(isUser.length === 0){
             await newUser(email,password,name);
             const userData = await getUser(email,password);
+            const Token = GenerateAccessAndRefreshToken(userData.user_id);
+            refreshTokens.push(Token.refershToken);
             res
             .status(201)
             .json({
-                userDetails:userData
+            userDetails:userData,
+            accessToken:Token.accessToken,
+            refreshToken:Token.refershToken
             });
         }
         else{
