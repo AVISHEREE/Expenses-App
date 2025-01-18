@@ -12,7 +12,7 @@ const LogIn = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/v1/user/signin", {
+      const response = await fetch("http://192.168.0.110:8080/v1/user/signin", {
         method: "POST",
         body: JSON.stringify({ email:Email, password:Password }),
         headers: {
@@ -29,6 +29,28 @@ const LogIn = () => {
       console.log("Error in sending req, ", err);
     }
   };
+const DirectLogin = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch("http://192.168.0.110:8080/v1/user/signin", {
+      method: "POST",
+      body: JSON.stringify({ email:"test@test.com", password:"av@123"}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    localStorage.setItem("userInfo",JSON.stringify(data.userDetails));
+    localStorage.setItem("accessToken",JSON.stringify(data.accessToken));
+    localStorage.setItem("refreshToken",JSON.stringify(data.refreshToken));
+    console.log("user logedin");
+    navigate('/');
+  } catch (err) {
+    console.log("Error in sending req, ", err);
+  }
+};
   return (
     <>
       <Navbar page={{ name: "Create Account", route: "signup" }} />
@@ -70,7 +92,8 @@ const LogIn = () => {
               Sign up
             </a>
             <p className="text-center text-sm text-gray-600 mt-4">
-              <button className="text-red-500 underline font-medium">
+              <button className="text-red-500 underline font-medium" 
+              onClick={DirectLogin}>
                 go with demo account
               </button>
             </p>
