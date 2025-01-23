@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-const Table = () => {
+
+const Table = ({ value }) => {
   const [Data, setData] = useState([]);
+  const [SearchData, setSearchData] = useState([]);
+  const [InputingText, setInputingText] = useState(false);
+
   const getData = async () => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
     const userId = user.user_id;
@@ -19,13 +22,30 @@ const Table = () => {
     );
     const userExpenses = await response.json();
     setData(userExpenses);
+    setSearchData(userExpenses); // Initialize SearchData
   };
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
     if (user) {
       getData();
-    } 
+    }
   }, []);
+
+  useEffect(() => {
+    if (value === "") {
+      setInputingText(false);
+      setSearchData(Data); // Reset SearchData to original Data
+    } else {
+      setInputingText(true);
+      const filteredData = Data.filter((item) =>
+        Object.values(item).some((field) =>
+          field.toString().toLowerCase().includes(value.toLowerCase())
+        )
+      );
+      setSearchData(filteredData);
+    }
+  }, [value, Data]);
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [modalOpen, setModalOpen] = useState(false);
@@ -37,7 +57,7 @@ const Table = () => {
       direction = "desc";
     }
 
-    const sortedData = [...Data].sort((a, b) => {
+    const sortedData = [...SearchData].sort((a, b) => {
       if (key === "date") {
         const dateA = new Date(a[key]);
         const dateB = new Date(b[key]);
@@ -49,7 +69,7 @@ const Table = () => {
       return 0;
     });
 
-    setData(sortedData);
+    setSearchData(sortedData);
     setSortConfig({ key, direction });
   };
 
@@ -63,9 +83,24 @@ const Table = () => {
     setCurrentItem(null);
   };
 
-  const handleDelete = () => {
-    setData(Data.filter((item) => item !== currentItem));
+  const handleDelete = async () => {
+    const expenseId = currentItem.id;
+    const token = JSON.parse(localStorage.getItem("accessToken"));
+    const response = await fetch(
+      "http://192.168.0.110:8080/v1/expense/delete-expense",
+      {
+        method: "DELETE",
+        body: JSON.stringify({ id: expenseId }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    await response.json();
+    console.log("Expense deleted");
     closeModal();
+    getData();
   };
 
   return (
@@ -75,9 +110,9 @@ const Table = () => {
           Expenses and Income
         </h2>
 
-        {Data.length > 0 ? (
+        {SearchData.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse border border-gray-300 ">
+            <table className="w-full text-left border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-head-bg-color text-data-bg-color">
                   <th
@@ -117,12 +152,12 @@ const Table = () => {
                 </tr>
               </thead>
               <tbody>
-                {Data.map((item, index) => (
+                {SearchData.map((item, index) => (
                   <tr
                     key={index}
                     className={`${
                       index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                    } border-t border-gray-300 cursor-pointer `}
+                    } border-t border-gray-300 cursor-pointer`}
                     onClick={() => openModal(item)}
                   >
                     <td className="p-2 text-sm">{item.amount}</td>
@@ -143,7 +178,7 @@ const Table = () => {
             </table>
           </div>
         ) : (
-          <div className="text-center text-gray-500">No expenses added.</div>
+          <div className="text-center text-gray-500">No expenses found.</div>
         )}
       </div>
 
@@ -162,15 +197,14 @@ const Table = () => {
               <strong>Date:</strong> {currentItem.date}
             </p>
             <p>
-              <strong>Description:</strong>
-              {currentItem.description}
+              <strong>Description:</strong> {currentItem.description}
             </p>
             <div className="mt-4 flex justify-between">
               <button
                 className="bg-red-500 text-white p-2 rounded"
                 onClick={handleDelete}
               >
-                Delete
+                Delete Expense
               </button>
               <button
                 className="bg-gray-500 text-white p-2 rounded"

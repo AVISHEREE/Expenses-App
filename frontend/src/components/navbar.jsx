@@ -1,13 +1,19 @@
 import React, { useState , useEffect } from "react";
-import { Link } from "react-router-dom";
-
-const Navbar = ({page}) => {
+import { Link, useNavigate } from "react-router-dom";
+import Table from "./table";
+const Navbar = (props) => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [TextInput, setTextInput] = useState("disabled");
+  const [TextInputState, setTextInputState] = useState("disabled");
+  const [TextInput, setTextInput] = useState("");
+  const handleInputChange = (e) => {
+    props.onInputChange(e.target.value);
+  };
+
   useEffect(() => {
     const auth = localStorage.getItem('userInfo');
     if(auth){
-      setTextInput("");
+      setTextInputState("");
     }
   }, [])
   
@@ -25,11 +31,12 @@ const Navbar = ({page}) => {
         <div className="hidden md:block w-px h-6 bg-gray-400"></div>
 
         {/* Add Expense Button */}
-        <button className="hover:text-gray-300 transition">Add Expense</button>
+        <button className="hover:text-gray-300 transition">something else</button>
       </div>
 
       {/* Center Section */}
-      <div className="text-center max-[600px]:mb-0 font-bold text-lg md:text-2xl tracking-wide mb-4 md:mb-0">
+      <div className="text-center max-[600px]:mb-0 font-bold text-lg md:text-2xl tracking-wide mb-4 md:mb-0"
+      onClick={()=>window.location.reload()}>
         Expense Assist App
       </div>
 
@@ -39,12 +46,13 @@ const Navbar = ({page}) => {
         <input
           type="text"
           placeholder="Search expenses"
-          disabled={TextInput}
+          disabled={TextInputState}
+          onChange={handleInputChange}
           className="bg-gray-800 text-white placeholder-gray-400 px-4 py-2 rounded w-full md:w-auto focus:outline-none focus:ring focus:ring-yellow-500"
         />
         <div className="hidden md:block w-px h-6 bg-gray-400"></div>
         {/* Contact Button */}
-        <Link className="hover:text-gray-300 transition" to={`/${page.route}`}>{page.name}</Link>
+        <Link className="hover:text-gray-300 transition" to={`/${props.page.route}`}>{props.page.name}</Link>
       </div>
       <button
           className="text-white focus:outline-none md:hidden"
@@ -67,18 +75,23 @@ const Navbar = ({page}) => {
           </svg>
         </button>
         {isMenuOpen && (
-        <div className="flex flex-col mt-2 space-y-4 md:hidden max-[640px]:mx-12">
-          <button className="hover:text-gray-300 transition">Insights</button>
-          <button className="hover:text-gray-300 transition">Add Expense</button>
-          <button><Link className="hover:text-gray-300 transition" to={`/${page.route}`}>{page.name}</Link></button>
-          <input
-            type="text"
-            placeholder="Search expenses"
-            disabled={TextInput}
-            className="bg-gray-800 text-white placeholder-gray-400 px-4 py-2 rounded focus:outline-none focus:ring focus:ring-yellow-500"
-          />
-        </div>
-      )} 
+  <div className="flex flex-col items-center mt-2 space-y-4 md:hidden max-[640px]:mx-20 sm:flex sm:space-y-2">
+    <button className="hover:text-gray-300 transition">Insights</button>
+    <button className="hover:text-gray-300 transition">Something Else</button>
+    <button>
+      <Link className="hover:text-gray-300 transition" to={`/${props.page.route}`}>
+        {props.page.name}
+      </Link>
+    </button>
+    <input
+      type="text"
+      placeholder="Search expenses"
+      disabled={TextInputState}
+      onChange={handleInputChange}
+      className="bg-gray-800 text-white placeholder-gray-400 px-4 py-2 rounded focus:outline-none focus:ring focus:ring-yellow-500 w-full sm:w-auto"
+      />
+  </div>
+)}
     </nav>
   );
 };
