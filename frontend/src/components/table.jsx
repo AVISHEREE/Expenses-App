@@ -10,7 +10,7 @@ const Table = ({ value }) => {
     const userId = user.user_id;
     const token = JSON.parse(localStorage.getItem("accessToken"));
     const response = await fetch(
-      "http://192.168.0.110:8080/v1/expense/get-all-expenses",
+      "http://192.168.0.106:8080/v1/expense/get-all-expenses",
       {
         method: "POST",
         body: JSON.stringify({ user_id: userId }),

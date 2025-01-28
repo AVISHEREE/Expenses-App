@@ -12,7 +12,7 @@ const LogIn = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://192.168.0.110:8080/v1/user/signin", {
+      const response = await fetch("http://192.168.0.106:8080/v1/user/signin", {
         method: "POST",
         body: JSON.stringify({ email:Email, password:Password }),
         headers: {
@@ -33,7 +33,7 @@ const DirectLogin = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await fetch("http://192.168.0.110:8080/v1/user/signin", {
+    const response = await fetch("http://192.168.0.106:8080/v1/user/signin", {
       method: "POST",
       body: JSON.stringify({ email:"test@test.com", password:"av@123"}),
       headers: {
@@ -83,7 +83,7 @@ const DirectLogin = async (e) => {
               Log In
             </button>
           </form>
-          <p className="text-center text-sm text-gray-600 mt-4">
+          <div className="text-center text-sm text-gray-600 mt-4">
             Don't have an account?{" "}
             <a
               href="/signup"
@@ -97,7 +97,7 @@ const DirectLogin = async (e) => {
                 go with demo account
               </button>
             </p>
-          </p>
+          </div>
         </div>
       </div>
     </>

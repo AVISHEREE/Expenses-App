@@ -1,61 +1,149 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
-const AnimatedCharacter = ({ message }) => {
-  const [showMessage, setShowMessage] = useState(false);
+const AnimatedCharacter = ({ message, variant = "default" }) => {
+  const [isActive, setIsActive] = useState(false);
+  const [currentMessage, setCurrentMessage] = useState("");
+  const user = JSON.parse(localStorage.getItem("userInfo") || "{}")?.name || "Friend";
+
+  const variants = {
+    default: {
+      primary: "#001F54", // Deep Blue
+      secondary: "#00A6FB", // Bright Sky Blue
+      accent: "#3EDBF0", // Aquamarine
+    },
+    alert: {
+      primary: "#420C09", // Deep Red
+      secondary: "#E63946", // Crimson Red
+      accent: "#FFB4A2", // Light Coral
+    },
+    success: {
+      primary: "#0F3D0F", // Forest Green
+      secondary: "#2BA84A", // Bright Green
+      accent: "#A7F3D0", // Mint Green
+    },
+    warning: {
+      primary: "#5C3D00", // Dark Gold
+      secondary: "#F4A261", // Sunset Orange
+      accent: "#FFE8A1", // Pale Yellow
+    },
+  };
+
+  const messages = {
+    default: [
+      `Hi ${user}! Let's manage expenses`,
+      "Tap for quick actions",
+      "Weekly budget remaining: $500",
+      "You've saved 12% this month!",
+    ],
+    alert: ["Unusual spending detected!", "Budget exceeded in 2 categories"],
+    success: ["Savings goal achieved! 🎉", "Payment received successfully"],
+    warning: ["Low balance alert", "Upcoming bill: Electricity"],
+  };
 
   useEffect(() => {
-    if (message) {
-      setShowMessage(true);
-      const timer = setTimeout(() => setShowMessage(false), 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
+    const msgs = messages[variant] || messages.default;
+    setCurrentMessage(message || msgs[Math.floor(Math.random() * msgs.length)]);
+  }, [message, variant]);
 
   return (
-    <div className="relative w-full h-screen bg-gradient-to-b from-blue-100 to-blue-300 flex items-end justify-center">
-      {/* Character Container */}
-      <div className="relative flex flex-col items-center mb-8">
-        {/* Speech Bubble */}
-        {showMessage && (
-          <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 p-4 bg-white text-gray-800 text-sm font-medium rounded-lg shadow-md animate-fadeInOut">
-            {message}
-          </div>
-        )}
-
-        {/* Character */}
-        <div className="relative flex flex-col items-center">
+    <div className="fixed left-4 bottom-6 z-50 cursor-pointer flex items-center gap-4">
+      {/* Assistant Character */}
+      <motion.div
+        className="relative group"
+        onHoverStart={() => setIsActive(true)}
+        onHoverEnd={() => setIsActive(false)}
+        animate={{ y: isActive ? -5 : 0 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        <motion.div
+          className="w-16 h-24 relative"
+          animate={{ rotate: isActive ? [0, -5, 3, 0] : 0 }}
+        >
           {/* Head */}
-          <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-teal-500 rounded-full flex justify-center items-center shadow-lg">
-            {/* Glasses */}
-            <div className="absolute flex space-x-2">
-              <div className="w-5 h-5 border-4 border-red-400 bg-transparent rounded-full"></div>
-              <div className="w-5 h-5 border-4 border-red-400 bg-transparent rounded-full"></div>
+          <div
+            className="absolute top-0 w-full h-10 rounded-full"
+            style={{ backgroundColor: variants[variant].secondary }}
+          >
+            {/* Antennas */}
+            <div
+              className="absolute -top-3 left-4 w-1 h-4 rounded-full"
+              style={{ backgroundColor: variants[variant].accent }}
+            />
+            <div
+              className="absolute -top-4 right-4 w-2 h-5 rounded-full origin-bottom"
+              style={{
+                backgroundColor: variants[variant].accent,
+                transform: isActive ? "rotate(15deg)" : "rotate(0deg)",
+              }}
+            />
+            {/* Eyes */}
+            <div className="flex justify-center gap-2 pt-2">
+              <div className="w-2 h-2 bg-white rounded-full animate-blink" />
+              <div className="w-2 h-2 bg-white rounded-full animate-blink" />
             </div>
-            {/* Hair */}
-            <div className="absolute top-[-10px] w-16 h-8 bg-teal-600 rounded-t-full"></div>
-            {/* Mouth */}
-            <div className="absolute bottom-4 w-8 h-2 bg-red-400 rounded-full"></div>
           </div>
 
           {/* Body */}
-          <div className="relative w-16 h-24 sm:w-20 sm:h-28 bg-orange-400 rounded-t-3xl shadow-md flex justify-center items-center">
-            {/* Arms */}
-            <div className="absolute -left-4 w-4 h-12 bg-teal-400 rounded-full rotate-[-20deg]"></div>
-            <div className="absolute -right-4 w-4 h-12 bg-teal-400 rounded-full rotate-[20deg]"></div>
-            {/* Buttons */}
-            <div className="flex flex-col space-y-2">
-              <div className="w-3 h-3 bg-white rounded-full"></div>
-              <div className="w-3 h-3 bg-white rounded-full"></div>
+          <div
+            className="absolute top-10 w-full h-12 rounded-lg shadow-lg"
+            style={{ backgroundColor: variants[variant].primary }}
+          >
+            {/* Screen Display */}
+            <div className="p-2">
+              <div
+                className="w-full h-full rounded bg-white/10 backdrop-blur-md flex items-center justify-center"
+              >
+                <svg
+                  className="w-5 h-5"
+                  style={{ color: variants[variant].accent }}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
 
-          {/* Legs */}
-          <div className="flex space-x-4 mt-2">
-            <div className="w-4 h-10 bg-teal-500 rounded-full"></div>
-            <div className="w-4 h-10 bg-teal-500 rounded-full"></div>
-          </div>
-        </div>
-      </div>
+          {/* Base */}
+          <div
+            className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full"
+            style={{ backgroundColor: variants[variant].secondary }}
+          />
+        </motion.div>
+
+        {/* Status Pulse */}
+        <motion.div
+          className="absolute inset-0 rounded-full opacity-0"
+          style={{ backgroundColor: variants[variant].primary }}
+          animate={{ opacity: [0, 0.2, 0], scale: [1, 1.4, 1] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+        />
+      </motion.div>
+      <motion.div
+        className="relative min-w-[180px] max-w-[240px] p-4 rounded-xl shadow-lg backdrop-blur-md"
+        style={{
+          backgroundColor: `${variants[variant].accent}33`,
+          border: `2px solid ${variants[variant].secondary}`,
+        }}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ type: "spring", stiffness: 200 }}
+      >
+        <p
+          className="text-sm font-semibold text-center"
+          style={{ color: variants[variant].primary }}
+        >
+          {currentMessage}
+        </p>
+      </motion.div>
     </div>
   );
 };

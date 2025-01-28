@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   content: [
     "./index.html",
@@ -9,12 +10,14 @@ export default {
       fontFamily: {
         'chakra-petch': ['Chakra Petch', 'sans-serif'],
       },
+      // spacing: '1.20rem',
       colors:{
         'heading-color':'#27283B',
-        'child-bg-color':'#D5DCFF',
-        'table-bg-color':'#ADBADA',
-        'head-bg-color':'#EEE8F6',
-        'data-bg-color':'#606FB1',
+        'child-bg-color':'#B3B3B3',
+        'table-bg-color':'#B3B3B3',
+        'head-bg-color':'#ffff',
+        'data-bg-color':'#27283B',
+        'primary-bg-color':'#B3B3B3',
       },
       cursor:{
         'custom-pointer': 'url("../src/assets/images/coinsCursor.png"), auto',
@@ -38,8 +41,18 @@ export default {
           "0%, 100%": { opacity: 1 },
           "50%": { opacity: 0.5 },
         },
+        animation: {
+          fadeInOut: "fadeInOut 5s ease-in-out",
+        },
+        keyframes: {
+          fadeInOut: {
+            "0%, 100%": { opacity: 0, transform: "translateY(-10px)" },
+            "50%": { opacity: 1, transform: "translateY(0)" },
+          },
       },
     },
+    },
   },
+  
   plugins: [],
 }

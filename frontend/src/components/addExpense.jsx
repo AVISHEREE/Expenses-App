@@ -19,7 +19,7 @@ const AddExpense = () => {
         alert("please enter date and value");
     }
     else{
-    const response = await fetch("http://192.168.0.110:8080/v1/expense/add-expense",{
+    const response = await fetch("http://192.168.0.106:8080/v1/expense/add-expense",{
         method:"POST",
         body: JSON.stringify({user_id:userId,amount:ExpenseAmount,date:ExpenseDate,type:ExpenseType,description:ExpenseDescription}),
         headers: {
@@ -32,16 +32,15 @@ const AddExpense = () => {
     window.location.reload();
 }
   }
-
-  
-  
   return (
     <div className="h-screen flex items-center justify-center bg-none z-50 fixed">
+      
       {/* Button to open modal */}
       <button
-        className="fixed bottom-5 right-5 bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-600 transition duration-300"
+        className="fixed max-sm:top-6 border-2 right-16 lg:right-4 lg:bottom-4 lg:bg-primary-bg-color text-white underline bg-none py-1 px-1.5 rounded-lg  lg:shadow-md hover:bg-red-600 transition duration-300"
         onClick={toggleModal}
       >
+        
         Add Expense
       </button>
 
