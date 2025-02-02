@@ -13,11 +13,12 @@ export default {
       // spacing: '1.20rem',
       colors:{
         'heading-color':'#27283B',
-        'child-bg-color':'#B3B3B3',
-        'table-bg-color':'#B3B3B3',
+        'child-bg-color':'#EEEEEE',
+        'table-bg-color':'#EEEEEE',
         'head-bg-color':'#ffff',
         'data-bg-color':'#27283B',
-        'primary-bg-color':'#B3B3B3',
+        'primary-bg-color':'#EEEEEE',
+        'new-text-color':'#393E46',
       },
       cursor:{
         'custom-pointer': 'url("../src/assets/images/coinsCursor.png"), auto',

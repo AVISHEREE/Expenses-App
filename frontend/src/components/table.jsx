@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import moment from 'moment';
 
 const Table = ({ value }) => {
   const [Data, setData] = useState([]);
@@ -21,6 +22,9 @@ const Table = ({ value }) => {
       }
     );
     const userExpenses = await response.json();
+      userExpenses.map((items)=>{
+        items.date = moment(items.date).format('DD MMMM, YYYY');
+      })
     setData(userExpenses);
     setSearchData(userExpenses); // Initialize SearchData
   };
@@ -50,7 +54,9 @@ const Table = ({ value }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [modalOpen, setModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
-
+  // if(currentItem != null){
+  //   const formattedDate = moment(currentItem.date).format('MMMM DD, YYYY, h:mm A');
+  // }
   const sortData = (key) => {
     let direction = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {
@@ -184,6 +190,7 @@ const Table = ({ value }) => {
 
       {/* Modal */}
       {modalOpen && currentItem && (
+        
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
             <h3 className="text-lg font-semibold mb-3">Expense Details</h3>

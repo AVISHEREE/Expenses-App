@@ -37,7 +37,7 @@ const AddExpense = () => {
       
       {/* Button to open modal */}
       <button
-        className="fixed max-sm:top-6 border-2 right-16 lg:right-4 lg:bottom-4 lg:bg-primary-bg-color text-white underline bg-none py-1 px-1.5 rounded-lg  lg:shadow-md hover:bg-red-600 transition duration-300"
+        className="fixed max-sm:top-6 border-2 right-16 lg:right-4 lg:bottom-4 lg:bg-primary-bg-color text-new-text-color underline bg-none py-1 px-1.5 rounded-lg  lg:shadow-md hover:bg-green-500 transition duration-300"
         onClick={toggleModal}
       >
         

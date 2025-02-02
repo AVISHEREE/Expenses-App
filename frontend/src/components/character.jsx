@@ -4,13 +4,12 @@ import { motion } from "framer-motion";
 const AnimatedCharacter = ({ message, variant = "default" }) => {
   const [isActive, setIsActive] = useState(false);
   const [currentMessage, setCurrentMessage] = useState("");
-  const user = JSON.parse(localStorage.getItem("userInfo") || "{}")?.name || "Friend";
 
   const variants = {
     default: {
-      primary: "#001F54", // Deep Blue
-      secondary: "#00A6FB", // Bright Sky Blue
-      accent: "#3EDBF0", // Aquamarine
+      primary: "#3C3D37", // Deep Blue
+      secondary: "#697565", // Bright Sky Blue
+      accent: "#ECDFCC", // Aquamarine
     },
     alert: {
       primary: "#420C09", // Deep Red
@@ -31,7 +30,7 @@ const AnimatedCharacter = ({ message, variant = "default" }) => {
 
   const messages = {
     default: [
-      `Hi ${user}! Let's manage expenses`,
+      `Hi! Let's manage expenses`,
       "Tap for quick actions",
       "Weekly budget remaining: $500",
       "You've saved 12% this month!",
@@ -139,7 +138,7 @@ const AnimatedCharacter = ({ message, variant = "default" }) => {
       >
         <p
           className="text-sm font-semibold text-center"
-          style={{ color: variants[variant].primary }}
+          style={{ color: "white"}}
         >
           {currentMessage}
         </p>

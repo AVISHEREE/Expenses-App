@@ -35,7 +35,8 @@ const Navbar = (props) => {
       </div>
 
       {/* Center Section */}
-      <div className="text-center max-[600px]:mb-0 font-bold text-lg md:text-2xl tracking-wide mb-4 md:mb-0"
+      <div 
+      className="text-center font-bold text-lg md:text-2xl tracking-wide cursor-pointer"
       onClick={()=>window.location.reload()}>
         Expense Assist App
       </div>
