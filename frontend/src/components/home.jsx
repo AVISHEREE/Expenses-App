@@ -20,6 +20,7 @@ const Home = () => {
     { text:"Tap for quick actions", type: "default" },
     { text: `Total Spending: ${totalSpending}`, type: totalSpending > 1000 ? "warning" : "success" },
     { text: `Total Expense In One Month: ${totalSpendingInOneMonth}`, type: totalSpendingInOneMonth > 500 ? "alert" : "default" },
+    { text:totalSpendingInOneMonth > 1000 ? "You're spending too much" : "You're doing great this month" , type: totalSpendingInOneMonth > 1000 ? "warning" : "success" },
   ];
   // TODO : Create a function for loop 
   useEffect(() => {
@@ -28,7 +29,7 @@ const Home = () => {
     };
 
     // Show the character for 15s, then hide for 15s, repeat
-    const interval = setInterval(toggleCharacter, 15000);
+    const interval = setInterval(toggleCharacter, 30000);
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);

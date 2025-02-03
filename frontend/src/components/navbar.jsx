@@ -24,15 +24,15 @@ const Navbar = (props) => {
         {/* Insights Button */}
         
           <button className="flex items-center hover:text-gray-300 transition">
-          <span className="ml-2">Insights</span>
+        <Link className="hover:text-gray-300 transition" to={`/${props.page.route}`}>{props.page.name}</Link>
         </button>
 
         {/* Center Line */}
         <div className="hidden md:block w-px h-6 bg-gray-400"></div>
-
+        <Link className="ml-2" to={"/insights"}>Insights</Link>
         {/* Add Expense Button */}
-        <button className="hover:text-gray-300 transition">something else</button>
       </div>
+      
 
       {/* Center Section */}
       <div 
@@ -53,7 +53,8 @@ const Navbar = (props) => {
         />
         <div className="hidden md:block w-px h-6 bg-gray-400"></div>
         {/* Contact Button */}
-        <Link className="hover:text-gray-300 transition" to={`/${props.page.route}`}>{props.page.name}</Link>
+        
+        <button className="hover:text-gray-300 transition">About & Projects</button>
       </div>
       <button
           className="text-white focus:outline-none md:hidden"
@@ -78,12 +79,12 @@ const Navbar = (props) => {
         {isMenuOpen && (
   <div className="flex flex-col items-center mt-2 space-y-4 md:hidden max-[640px]:mx-20 sm:flex sm:space-y-2">
     <button className="hover:text-gray-300 transition">Insights</button>
-    <button className="hover:text-gray-300 transition">Something Else</button>
     <button>
       <Link className="hover:text-gray-300 transition" to={`/${props.page.route}`}>
         {props.page.name}
       </Link>
     </button>
+    <button className="hover:text-gray-300 transition">About & Projects</button>
     <input
       type="text"
       placeholder="Search expenses"
