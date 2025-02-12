@@ -1,10 +1,10 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Home from './components/home.jsx';
-import Profile from './components/profile.jsx';
-import SignUp from './components/signUp.jsx';
-import LogIn from './components/logIn.jsx';
-import Insights from './components/insights.jsx';
+import Home from './pages/home.jsx';
+import Profile from './pages/profile.jsx';
+import SignUp from './pages/signUp.jsx';
+import LogIn from './pages/logIn.jsx';
+import Insights from './pages/insights.jsx';
 import PrivateComponent from './components/privateComponent.jsx';
 const App = () => {
   return (
