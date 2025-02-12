@@ -46,7 +46,7 @@ const AnimatedCharacter = ({ message, variant = "default" }) => {
   }, [message, variant]);
 
   return (
-    <div className="fixed left-4 bottom-6 z-50 cursor-pointer flex items-center gap-4">
+    <div className="fixed left-4 bottom-6 cursor-pointer flex items-center gap-4">
       {/* Assistant Character */}
       <motion.div
         className="relative group"

@@ -30,15 +30,13 @@ const Navbar = (props) => {
         {/* Center Line */}
         <div className="hidden md:block w-px h-6 bg-gray-400"></div>
         <Link className="ml-2" to={"/insights"}>Insights</Link>
-        {/* Add Expense Button */}
       </div>
       
 
       {/* Center Section */}
       <div 
-      className="text-center font-bold text-lg md:text-2xl tracking-wide cursor-pointer"
-      onClick={()=>window.location.reload()}>
-        Expense Assist App
+      className="text-center font-bold text-lg md:text-2xl tracking-wide cursor-pointer">
+        <Link to={'/'}>Expense Assist App</Link>
       </div>
 
       {/* Right Section */}
@@ -78,12 +76,12 @@ const Navbar = (props) => {
         </button>
         {isMenuOpen && (
   <div className="flex flex-col items-center mt-2 space-y-4 md:hidden max-[640px]:mx-20 sm:flex sm:space-y-2">
-    <button className="hover:text-gray-300 transition">Insights</button>
     <button>
       <Link className="hover:text-gray-300 transition" to={`/${props.page.route}`}>
         {props.page.name}
       </Link>
     </button>
+    <button className="hover:text-gray-300 transition"><Link to={'/insights'}>Insights</Link></button>
     <button className="hover:text-gray-300 transition">About & Projects</button>
     <input
       type="text"

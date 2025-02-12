@@ -1,27 +1,13 @@
 import React, { useState, useEffect } from "react";
 import moment from 'moment';
-
+import {Data as ExpensesData} from '../assets/Functions/userDataAnylise.js'
 const Table = ({ value }) => {
   const [Data, setData] = useState([]);
   const [SearchData, setSearchData] = useState([]);
   const [InputingText, setInputingText] = useState(false);
 
-  const getData = async () => {
-    const user = JSON.parse(localStorage.getItem("userInfo"));
-    const userId = user.user_id;
-    const token = JSON.parse(localStorage.getItem("accessToken"));
-    const response = await fetch(
-      "http://192.168.0.106:8080/v1/expense/get-all-expenses",
-      {
-        method: "POST",
-        body: JSON.stringify({ user_id: userId }),
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const userExpenses = await response.json();
+  const getData = () => {
+    const userExpenses = ExpensesData;
       userExpenses.map((items)=>{
         items.date = moment(items.date).format('DD MMMM, YYYY');
       })
@@ -54,9 +40,6 @@ const Table = ({ value }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [modalOpen, setModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
-  // if(currentItem != null){
-  //   const formattedDate = moment(currentItem.date).format('MMMM DD, YYYY, h:mm A');
-  // }
   const sortData = (key) => {
     let direction = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {
@@ -93,7 +76,7 @@ const Table = ({ value }) => {
     const expenseId = currentItem.id;
     const token = JSON.parse(localStorage.getItem("accessToken"));
     const response = await fetch(
-      "http://192.168.0.110:8080/v1/expense/delete-expense",
+      "http://192.168.0.108:8080/v1/expense/delete-expense",
       {
         method: "DELETE",
         body: JSON.stringify({ id: expenseId }),
@@ -106,7 +89,7 @@ const Table = ({ value }) => {
     await response.json();
     console.log("Expense deleted");
     closeModal();
-    getData();
+    window.location.reload();
   };
 
   return (

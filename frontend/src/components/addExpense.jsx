@@ -1,50 +1,63 @@
-import React, {  useState } from "react";
+"use client"
+
+import { useState } from "react"
+import { Calendar } from "@/components/ui/calendar"
+import { Button } from "@/components/ui/button"
+import { format } from "date-fns"
 
 const AddExpense = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [ExpenseAmount, setExpenseAmount] = useState("");
-  const [ExpenseDate, setExpenseDate] = useState("");
-  const [ExpenseType, setExpenseType] = useState("grocery");
-  const [ExpenseDescription, setExpenseDescription] = useState("");
+  const [isOpen, setIsOpen] = useState(false)
+  const [ExpenseAmount, setExpenseAmount] = useState("")
+  const [ExpenseDate, setExpenseDate] = useState("")
+  const [ExpenseType, setExpenseType] = useState("grocery")
+  const [ExpenseDescription, setExpenseDescription] = useState("")
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
 
-  const userId = JSON.parse(localStorage.getItem("userInfo")).user_id;
-  const token = JSON.parse(localStorage.getItem("accessToken"));
+  const userId = JSON.parse(localStorage.getItem("userInfo") || "{}").user_id
+  const token = JSON.parse(localStorage.getItem("accessToken") || '""')
 
   const toggleModal = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleSubmit = async () =>{
-    if(ExpenseAmount == "" || ExpenseDate == ""){
-        alert("please enter date and value");
-    }
-    else{
-    const response = await fetch("http://192.168.0.106:8080/v1/expense/add-expense",{
-        method:"POST",
-        body: JSON.stringify({user_id:userId,amount:ExpenseAmount,date:ExpenseDate,type:ExpenseType,description:ExpenseDescription}),
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-    })
-    const data = await response.json();
-    setIsOpen(false)
-    window.location.reload();
-}
+    setIsOpen(!isOpen)
   }
+
+  const toggleCalendar = () => setIsCalendarOpen(!isCalendarOpen)
+
+  const handleSubmit = async () => {
+    if (ExpenseAmount === "" || ExpenseDate === "") {
+      alert("Please enter date and value")
+    } else {
+      const formattedDate = format(ExpenseDate, "yyyy-MM-dd")
+      console.log(formattedDate)
+
+      const response = await fetch("http://192.168.0.108:8080/v1/expense/add-expense", {
+        method: "POST",
+        body: JSON.stringify({
+          user_id: userId,
+          amount: ExpenseAmount,
+          date: formattedDate,
+          type: ExpenseType,
+          description: ExpenseDescription,
+        }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      await response.json()
+      setIsOpen(false);
+      window.location.reload();
+    }
+  }
+
   return (
     <div className="h-screen flex items-center justify-center bg-none z-50 fixed">
-      
-      {/* Button to open modal */}
       <button
-        className="fixed max-sm:top-6 border-2 right-16 lg:right-4 lg:bottom-4 lg:bg-primary-bg-color text-new-text-color underline bg-none py-1 px-1.5 rounded-lg  lg:shadow-md hover:bg-green-500 transition duration-300"
+        className="fixed max-sm:top-6 border-2 right-16 lg:right-4 lg:bottom-4 lg:bg-primary-bg-color text-new-text-color underline bg-none py-1 px-1.5 rounded-lg lg:shadow-md hover:bg-green-500 transition duration-300"
         onClick={toggleModal}
       >
-        
         Add Expense
       </button>
 
-      {/* Modal */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -52,67 +65,63 @@ const AddExpense = () => {
         >
           <div
             className="bg-white rounded-lg shadow-lg w-80 max-w-full p-5 relative"
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the box
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Cross button */}
-            <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-black"
-              onClick={toggleModal}
-            >
+            <button className="absolute top-2 right-2 text-gray-500 hover:text-black" onClick={toggleModal}>
               ❌
             </button>
-            <h2 className="text-lg font-semibold mb-4 text-center text-blue-600">
-              Add Your Expense
-            </h2>
+            <h2 className="text-lg font-semibold mb-4 text-center text-blue-600">Add Your Expense</h2>
             <div className="space-y-4">
-              {/* Expense Amount */}
               <input
                 type="number"
                 name="amount"
                 value={ExpenseAmount}
-                onChange={(e)=>{
-                    setExpenseAmount(e.target.value)
-                }}
+                onChange={(e) => setExpenseAmount(e.target.value)}
                 placeholder="Expense amount..."
                 className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
               />
 
-              {/* Expense Date */}
-              <input
-                type="date"
-                name="date"
-                value={ExpenseDate}
-                onChange={(e)=>{
-                    setExpenseDate(e.target.value)
-                }}
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-              />
+              <div className="relative">
+                <Button
+                  variant="outline"
+                  className={`w-full justify-start text-left font-normal ${!ExpenseDate && "text-muted-foreground"}`}
+                  onClick={toggleCalendar}
+                >
+                  {ExpenseDate !== "" ? format(ExpenseDate, "yyyy-MM-dd") : <span>Select a date for your expense</span>}
+                </Button>
+                {isCalendarOpen && (
+                  <div className="absolute z-10 mt-2">
+                    <Calendar
+                      mode="single"
+                      selected={ExpenseDate}
+                      onSelect={(newDate) => {
+                        if (newDate) {
+                          setExpenseDate(newDate)
+                          setIsCalendarOpen(false)
+                        }
+                      }}
+                      className="rounded-md border bg-background shadow"
+                    />
+                  </div>
+                )}
+              </div>
 
-              {/* Expense Description */}
               <input
                 type="text"
                 name="description"
                 placeholder="Expense description..."
                 value={ExpenseDescription}
-                onChange={(e)=>{
-                    setExpenseDescription(e.target.value)
-                }}
+                onChange={(e) => setExpenseDescription(e.target.value)}
                 className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
               />
 
-              {/* Expense Type */}
               <select
                 name="type"
                 value={ExpenseType}
-                onChange={(e)=>{
-                    setExpenseType(e.target.value)
-                }}
+                onChange={(e) => setExpenseType(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 bg-white shadow-md hover:bg-gray-50 transition"
               >
-                <optgroup
-                  label="Expense Type"
-                  className="font-bold text-gray-700"
-                >
+                <optgroup label="Expense Type" className="font-bold text-gray-700">
                   <option value="grocery" className="text-gray-600">
                     🛒 Grocery
                   </option>
@@ -136,9 +145,10 @@ const AddExpense = () => {
                   </option>
                 </optgroup>
               </select>
-              {/* Submit Button */}
-              <button className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
-              onClick={handleSubmit}
+
+              <button
+                className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                onClick={handleSubmit}
               >
                 Add Expense
               </button>
@@ -147,7 +157,8 @@ const AddExpense = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default AddExpense;
+export default AddExpense
+
