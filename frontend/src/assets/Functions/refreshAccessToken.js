@@ -5,7 +5,6 @@ const refreshRefreshToken = async () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userBalance");
-    navigate("/signup");
     window.location.reload();
   }
 };
