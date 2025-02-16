@@ -88,28 +88,7 @@ const AnimatedCharacter = ({ message, variant = "default" }) => {
             className="absolute top-10 w-full h-12 rounded-lg shadow-lg"
             style={{ backgroundColor: variants[variant].primary }}
           >
-            {/* Screen Display */}
-            <div className="p-2">
-              <div
-                className="w-full h-full rounded bg-white/10 backdrop-blur-md flex items-center justify-center"
-              >
-                <svg
-                  className="w-5 h-5"
-                  style={{ color: variants[variant].accent }}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
             </div>
-          </div>
 
           {/* Base */}
           <div
@@ -127,7 +106,7 @@ const AnimatedCharacter = ({ message, variant = "default" }) => {
         />
       </motion.div>
       <motion.div
-        className="relative min-w-[180px] max-w-[240px] p-4 rounded-xl shadow-lg backdrop-blur-md"
+        className="relative min-w-[180px] max-w-[240px] p-3 rounded-xl shadow-lg backdrop-blur-md"
         style={{
           backgroundColor: `${variants[variant].accent}33`,
           border: `2px solid ${variants[variant].secondary}`,
