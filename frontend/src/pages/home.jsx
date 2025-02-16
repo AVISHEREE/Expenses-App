@@ -25,7 +25,7 @@ const Home = () => {
       setShowCharacter((prev) => !prev);
     };
 
-    const interval = setInterval(toggleCharacter, 30000);
+    const interval = setInterval(toggleCharacter, 10000000000);
 
     return () => clearInterval(interval);
   }, []);
