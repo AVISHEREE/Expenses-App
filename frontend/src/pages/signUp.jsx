@@ -1,5 +1,5 @@
 import React , {useState} from "react";
-import Navbar from "../components/navbar";
+import Navbar from "../components/navbar.jsx";
 import { useNavigate } from 'react-router-dom';
 import { lH } from "@/assets/Functions/host.js";
 
