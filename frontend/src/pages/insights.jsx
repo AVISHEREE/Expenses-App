@@ -3,7 +3,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip,
   PieChart, Pie, Cell, ResponsiveContainer, Legend
 } from "recharts";
-import Navbar from "../components/Navbar.jsx";
+import Navbar from "../components/navbar.jsx";
 import { totalSpending, totalSpendingInOneMonth, Data } from '../assets/Functions/userDataAnylise.js';
 
 const Insights = () => {
