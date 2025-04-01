@@ -2,7 +2,8 @@ import { addSingleExpense ,
          getSingleExpense , 
          deleteSingleExpense ,
          getAllExpenseForAnUser ,
-         updateExpense } from "../database/databaseFunctions/expense.function.js";
+         updateExpense,
+         searchExpenses } from "../database/databaseFunctions/expense.function.js";
 
 const addExpense = async (req,res)=>{
     const {user_id,amount,date,type = "",description = ""} = req.body;
@@ -84,10 +85,18 @@ const updateAnExpense = async (req,res)=>{
     });
 }//update an expense from DB
 
+const searchingExpenses = async (req,res) =>{
+    const {input} = req.body;
+    const result = await searchExpenses(input);
+    res.status(201)
+    .json(result);
+}
+
 export{
     addExpense,
     getAnExpense,
     getAllExpense,
     deleteAnExpense,
-    updateAnExpense
+    updateAnExpense,
+    searchingExpenses
 }

@@ -15,7 +15,7 @@ app.get('/',(req,res)=>{
 });
 app.use('/v1/user',userRoutes)
 app.use('/v1/expense',expenseRouter)
-app.get('/v1/refresh',refreshRefreshToken);
+app.post('/v1/refresh',refreshRefreshToken);
 
 
 app.listen(8080,()=>{
