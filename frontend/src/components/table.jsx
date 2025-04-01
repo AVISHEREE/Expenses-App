@@ -7,8 +7,8 @@ const Table = ({ value }) => {
   const [SearchData, setSearchData] = useState([]);
   const [InputingText, setInputingText] = useState(false);
 
-  const getData = async () => {
-    const userExpenses = await ExpensesData;
+  const getData = () => {
+    const userExpenses = ExpensesData;
     console.log(userExpenses);
     if(!userExpenses){
       window.location.reload();
