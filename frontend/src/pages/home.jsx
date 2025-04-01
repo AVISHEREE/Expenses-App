@@ -38,7 +38,10 @@ const Home = () => {
 
     return () => clearInterval(interval);
   }, []);
-
+  useEffect(() => {
+    
+  })
+  
   useEffect(() => {
     setCharacterMessage(userMessages[messageIndex].text);
     setVariant(userMessages[messageIndex].type);

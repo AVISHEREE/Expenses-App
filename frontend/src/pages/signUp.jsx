@@ -1,6 +1,7 @@
 import React , {useState} from "react";
 import Navbar from "../components/navbar";
 import { useNavigate } from 'react-router-dom';
+import { lH } from "@/assets/Functions/host.js";
 
 const SignUp = () => {
 const navigate = useNavigate();
@@ -13,7 +14,7 @@ const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await fetch("http://192.168.0.108:8080/v1/user/signup", {
+    const response = await fetch(`http://${lH}:8080/v1/user/signup`, {
       method: "POST",
       body: JSON.stringify({ email:Email, password:Password , name : Name}),
       headers: {
@@ -35,7 +36,7 @@ const DirectLogin = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await fetch("http://192.168.0.108:8080/v1/user/signin", {
+    const response = await fetch(`http://${lH}:8080/v1/user/signin`, {
       method: "POST",
       body: JSON.stringify({ email:"test@test.com", password:"av@123"}),
       headers: {

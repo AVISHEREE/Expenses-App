@@ -1,6 +1,8 @@
 import {jwtDecode} from 'jwt-decode';
 import refreshRefreshToken from '@/assets/Functions/refreshAccessToken.js';
 import moment from "moment";
+import { lH } from './host.js';
+// import
 moment.createFromInputFallback = function(config) {
   config._d = new Date(config._i); // Use default Date constructor
 };
@@ -14,7 +16,7 @@ const getData = async () => {
     await refreshRefreshToken();
   }
   const response = await fetch(
-    "http://192.168.0.108:8080/v1/expense/get-all-expenses",
+    `http://${lH}:8080/v1/expense/get-all-expenses`,
     {
       method: "POST",
       body: JSON.stringify({ user_id: userId }),

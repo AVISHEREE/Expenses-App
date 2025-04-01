@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from "react";
 import moment from 'moment';
 import {Data as ExpensesData} from '../assets/Functions/userDataAnylise.js'
+import { lH } from "@/assets/Functions/host.js";
 const Table = ({ value }) => {
   const [Data, setData] = useState([]);
   const [SearchData, setSearchData] = useState([]);
   const [InputingText, setInputingText] = useState(false);
 
-  const getData = () => {
-    const userExpenses = ExpensesData;
+  const getData = async () => {
+    const userExpenses = await ExpensesData;
+    console.log(userExpenses);
+    if(!userExpenses){
+      window.location.reload();
+    }
       userExpenses.map((items)=>{
         items.date = moment(items.date).format('DD MMMM, YYYY');
       })
     setData(userExpenses);
     setSearchData(userExpenses); // Initialize SearchData
+    
   };
 
   useEffect(() => {
@@ -76,7 +82,7 @@ const Table = ({ value }) => {
     const expenseId = currentItem.id;
     const token = JSON.parse(localStorage.getItem("accessToken"));
     const response = await fetch(
-      "http://192.168.0.108:8080/v1/expense/delete-expense",
+      `http://${lH}:8080/v1/expense/delete-expense`,
       {
         method: "DELETE",
         body: JSON.stringify({ id: expenseId }),

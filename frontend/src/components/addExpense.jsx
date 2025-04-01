@@ -8,6 +8,7 @@ import "primeicons/primeicons.css";
 import "regenerator-runtime/runtime";
 import SpeechRecognition, { useSpeechRecognition , isMicrophoneAvailable } from "react-speech-recognition";
 import { Plus } from "lucide-react";
+import { lH } from '../assets/Functions/host.js';
 
 const AddExpense = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -109,7 +110,7 @@ const AddExpense = () => {
 
     const formattedDate = format(ExpenseDate, "yyyy-MM-dd");
 
-    const response = await fetch("http://192.168.0.108:8080/v1/expense/add-expense", {
+    const response = await fetch(`http://${lH}:8080/v1/expense/add-expense`, {
       method: "POST",
       body: JSON.stringify({
         user_id: userId,

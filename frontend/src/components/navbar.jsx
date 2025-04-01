@@ -1,7 +1,9 @@
 import React, { useState , useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation  } from "react-router-dom";
 import Table from "./table";
 const Navbar = (props) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [TextInputState, setTextInputState] = useState("disabled");
@@ -12,7 +14,7 @@ const Navbar = (props) => {
 
   useEffect(() => {
     const auth = localStorage.getItem('userInfo');
-    if(auth){
+    if(auth && currentPath==='/'){
       setTextInputState("");
     }
   }, [])
@@ -52,7 +54,7 @@ const Navbar = (props) => {
         <div className="hidden md:block w-px h-6 bg-gray-400"></div>
         {/* Contact Button */}
         
-        <button className="hover:text-gray-300 transition">About & Projects</button>
+      <Link to={'/a&p'}><button className="hover:text-gray-300 transition">About & Projects</button></Link>
       </div>
       <button
           className="text-white focus:outline-none md:hidden"
@@ -82,7 +84,7 @@ const Navbar = (props) => {
       </Link>
     </button>
     <button className="hover:text-gray-300 transition"><Link to={'/insights'}>Insights</Link></button>
-    <button className="hover:text-gray-300 transition">About & Projects</button>
+    <Link to={'a&p'}><button className="hover:text-gray-300 transition">About & Projects</button></Link>
     <input
       type="text"
       placeholder="Search expenses"
