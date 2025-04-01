@@ -73,7 +73,7 @@ const monthName = today.toLocaleString('default', { month: 'long' });
 }
 let totalSpending ;
 let totalSpendingInOneMonth ;
-let Data = await getData();
+let Data = getData();
 if(Data){
    totalSpending = analizeTotalSpending();
    totalSpendingInOneMonth = analizeTotalSpedingInOneMonth();
