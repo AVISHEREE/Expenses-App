@@ -56,25 +56,22 @@ const analizeTotalSpending = () => {
   return amount;
 };
 
-const analizeTotalSpedingInOneMonth = () =>{
+const analizeTotalSpedingInOneMonth = () => {
   let amount = 0;
   const today = new Date();
-const monthName = today.toLocaleString('default', { month: 'long' });
-  Data.map((items,keys) => {
-    // items.date = moment(items.date).format('DD MMMM, YYYY');
-  for(keys in items)
-  {
-    if(keys === "date"){
-      if(moment(items.date).format('MMMM') == monthName){
-        amount += items.amount;
-      }
-    }
+  const monthName = today.toLocaleString("default", { month: "long" });
+
+  if (!Array.isArray(Data)) {
+    console.error("Error: Data is not an array", Data);
+    return 0;
   }
-  
-});
+
+  amount = Data.filter(item => moment(item.date).format("MMMM") === monthName)
+              .reduce((total, item) => total + (item.amount || 0), 0);
 
   return amount;
-}
+};
+
 let totalSpending ;
 let totalSpendingInOneMonth ;
 let Data = getData();
