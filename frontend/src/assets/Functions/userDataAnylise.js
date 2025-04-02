@@ -46,9 +46,11 @@ const isTokenExpired = (token) => {
 
 const analizeTotalSpending = () => {
   let amount = 0;
-  Data.map((items) => {
-    amount += items.amount;
-  });
+  if(Data){
+    Data.map((items) => {
+      amount += items.amount;
+    });
+  }
   return amount;
 };
 
