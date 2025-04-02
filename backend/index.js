@@ -3,7 +3,11 @@ import { userRoutes } from './router/user.router.js';
 import { expenseRouter } from './router/expense.router.js';
 import jwt from 'jsonwebtoken'
 import { refreshRefreshToken } from './controller/user.controller.js';
+import dotenv from 'dotenv';
 import cors from 'cors'
+dotenv.config({
+    path:'./env'
+})
 const app = express();
 
 app.use(express.json());

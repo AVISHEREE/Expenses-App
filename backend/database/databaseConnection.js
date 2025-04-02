@@ -5,7 +5,12 @@ const pool = await mysql.createConnection({
     host: process.env.HOST,
     user:process.env.USER,
     password:process.env.PASSWORD,
-    database:process.env.DATABASE_NAME
+    database:process.env.DATABASE_NAME,
+    ssl: {
+        rejectUnauthorized: true 
+      }
 });
+console.log(process.env.USER)
+// console.log(process.env);
 console.log("MySQL database connected");
 export {pool};
