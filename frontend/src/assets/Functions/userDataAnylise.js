@@ -46,11 +46,13 @@ const isTokenExpired = (token) => {
 
 const analizeTotalSpending = () => {
   let amount = 0;
-  if(Data){
-    Data.map((items) => {
-      amount += items.amount;
+  
+  if (Array.isArray(Data)) {
+    Data.forEach((item) => {
+      amount += item.amount || 0; // Ensure item.amount is a valid number
     });
   }
+
   return amount;
 };
 
