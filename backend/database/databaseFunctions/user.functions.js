@@ -28,7 +28,7 @@ const existingUserCheck = async (email) =>{
 const getUser = async (email,password) =>{
   try {
     const [results] = await pool.query(`SELECT user_id,email,mobileNumber,balance,name
-                                        FROM users 
+                                        FROM test.users 
                                         WHERE email = ? AND password = ?`,
                                         [email,password]);
   

@@ -10,7 +10,7 @@ const pool = await mysql.createConnection({
         rejectUnauthorized: true 
       }
 });
-console.log(process.env.USER)
+
 // console.log(process.env);
 console.log("MySQL database connected");
 export {pool};
