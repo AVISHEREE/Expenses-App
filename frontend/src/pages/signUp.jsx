@@ -1,6 +1,6 @@
 import React , {useState} from "react";
 import Navbar from "../components/navbar.jsx";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { lH } from "@/assets/Functions/host.js";
 
 const SignUp = () => {
@@ -96,12 +96,12 @@ const DirectLogin = async (e) => {
           </form>
           <p className="text-center text-sm text-gray-600 mt-4">
             have an account?{" "}
-            <a
-              href="/login"
+            <Link
+              to={'/login'}
               className="text-blue-500 hover:underline font-medium"
             >
               Login
-            </a>
+            </Link>
           </p>
           <p className="text-center text-sm text-gray-600 mt-4">
             <button className="text-red-500 underline font-medium" 

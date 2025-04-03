@@ -27,6 +27,7 @@ const getData = async () => {
     }
   );
   const userExpenses = await response.json();
+  console.log(await userExpenses)
   userExpenses.map((items) => {
     items.date = moment(items.date).format("DD MMMM, YYYY");
   });

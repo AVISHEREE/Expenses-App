@@ -86,12 +86,12 @@ const DirectLogin = async (e) => {
           </form>
           <div className="text-center text-sm text-gray-600 mt-4">
             Don't have an account?{" "}
-            <a
-              href="/signup"
-              className="text-blue-500 hover:underline font-medium"
+           <Link
+             to={'/login'}
+             className="text-blue-500 hover:underline font-medium"
             >
-              Sign up
-            </a>
+              Signup
+            </Link>
             <p className="text-center text-sm text-gray-600 mt-4">
               <button className="text-red-500 underline font-medium" 
               onClick={DirectLogin}>
