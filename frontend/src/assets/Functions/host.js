@@ -1,1 +1,1 @@
-export const lH =  'https://expenses-app-rxsa.onrender.com/';
+export const lH =  'expenses-app-rxsa.onrender.com';
