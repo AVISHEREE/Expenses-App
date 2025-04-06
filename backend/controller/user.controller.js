@@ -85,10 +85,8 @@ const userSignin = async (req,res)=>{
     }
     else{
         const userData = await getUser(email,password);
-        if(userData.user_id){
-            const Token = GenerateAccessAndRefreshToken(userData.user_id);
-            refreshTokens.push(Token.refershToken);
-        }
+        const Token = GenerateAccessAndRefreshToken(userData.user_id);
+        refreshTokens.push(Token.refershToken);
         res
         .status(201)
         .json({
