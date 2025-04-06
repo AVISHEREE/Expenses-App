@@ -23,6 +23,6 @@ app.post('/v1/refresh',refreshRefreshToken);
 
 
 app.listen(8080,()=>{
-    console.log("port listing on \nhttp://localhost:8080");
+    console.log("port listing on host:8080");
 })
 

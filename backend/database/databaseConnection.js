@@ -11,6 +11,5 @@ const pool = await mysql.createConnection({
       }
 });
 
-// console.log(process.env);
 console.log("MySQL database connected");
 export {pool};

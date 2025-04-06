@@ -3,7 +3,7 @@ import { pool } from "../databaseConnection.js";
 const addSingleExpense = async (user_id, amount, date, type, description) => {
   try {
     const [results] = await pool.query(
-      `INSERT INTO 
+                                      `INSERT INTO 
                                        expenses(user_id,amount,date,type,description)
                                        VALUES(?,?,?,?,?)`,
       [user_id, amount, date, type, description]
@@ -17,7 +17,7 @@ const addSingleExpense = async (user_id, amount, date, type, description) => {
 const getAllExpenseForAnUser = async (userId) => {
   try {
     const [results] = await pool.query(
-      `SELECT e.id , e.amount , e.date , e.type , e.description 
+                                     `SELECT e.id , e.amount , e.date , e.type , e.description 
                                       FROM expenses e
                                       JOIN users u
                                       ON  e.user_id = u.user_id
@@ -33,8 +33,8 @@ const getAllExpenseForAnUser = async (userId) => {
 const getSingleExpense = async (expenseId) => {
   try {
     const [results] = await pool.query(
-      `SELECT * FROM expenses
-                                            WHERE id = ?`,
+                                         `SELECT * FROM expenses
+                                          WHERE id = ?`,
       [expenseId]
     );
     return results[0];
@@ -57,7 +57,7 @@ const deleteSingleExpense = async (expenseId) => {
 const updateExpense = async (whatFeildToUpdate, valueToUpdate, expenseId) => {
   try {
     const results = await pool.query(
-      `UPDATE expenses
+                                     `UPDATE expenses
                                       SET ${whatFeildToUpdate} = ? 
                                       WHERE id = ?`,
       [valueToUpdate, expenseId]
