@@ -16,7 +16,7 @@ const getData = async () => {
     await refreshRefreshToken();
   }
   const response = await fetch(
-    `http://${lH}:8080/v1/expense/get-all-expenses`,
+    `http://${lH}/v1/expense/get-all-expenses`,
     {
       method: "POST",
       body: JSON.stringify({ user_id: userId }),

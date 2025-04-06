@@ -110,7 +110,7 @@ const AddExpense = () => {
 
     const formattedDate = format(ExpenseDate, "yyyy-MM-dd");
 
-    const response = await fetch(`http://${lH}:8080/v1/expense/add-expense`, {
+    const response = await fetch(`http://${lH}/v1/expense/add-expense`, {
       method: "POST",
       body: JSON.stringify({
         user_id: userId,

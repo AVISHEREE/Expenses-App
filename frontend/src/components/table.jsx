@@ -82,7 +82,7 @@ const Table = ({ value }) => {
     const expenseId = currentItem.id;
     const token = JSON.parse(localStorage.getItem("accessToken"));
     const response = await fetch(
-      `http://${lH}:8080/v1/expense/delete-expense`,
+      `http://${lH}/v1/expense/delete-expense`,
       {
         method: "DELETE",
         body: JSON.stringify({ id: expenseId }),

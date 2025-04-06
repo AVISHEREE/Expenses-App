@@ -13,7 +13,7 @@ const LogIn = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://${lH}:8080/v1/user/signin`, {
+      const response = await fetch(`http://${lH}/v1/user/signin`, {
         method: "POST",
         body: JSON.stringify({ email:Email, password:Password }),
         headers: {
@@ -34,7 +34,7 @@ const DirectLogin = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await fetch(`http://${lH}:8080/v1/user/signin`, {
+    const response = await fetch(`http://${lH}/v1/user/signin`, {
       method: "POST",
       body: JSON.stringify({ email:"test@test.com", password:"av@123"}),
       headers: {
