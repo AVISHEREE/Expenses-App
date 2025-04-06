@@ -8,7 +8,9 @@ const pool = await mysql.createConnection({
     database:process.env.DATABASE_NAME,
     ssl: {
         rejectUnauthorized: true 
-      }
+      },
+    keepAliveInitialDelay: 10000, // 0 by default.
+    enableKeepAlive: true, 
 });
 
 console.log("MySQL database connected");

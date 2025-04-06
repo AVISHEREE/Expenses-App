@@ -3,11 +3,17 @@ import { pool } from "../databaseConnection.js";
 const addSingleExpense = async (user_id, amount, date, type, description) => {
   try {
     const [results] = await pool.query(
-                                      `INSERT INTO 
+      `INSERT INTO 
                                        expenses(user_id,amount,date,type,description)
                                        VALUES(?,?,?,?,?)`,
-      [user_id, amount, date, type, description]
+      [user_id, amount, date, type, description],
+      (err) => {
+        if (err) throw err;
+        console.log("User inserted!");
+        connection.end();
+      }
     );
+    console.log(results);
     return results;
   } catch (err) {
     return err;
@@ -17,12 +23,17 @@ const addSingleExpense = async (user_id, amount, date, type, description) => {
 const getAllExpenseForAnUser = async (userId) => {
   try {
     const [results] = await pool.query(
-                                     `SELECT e.id , e.amount , e.date , e.type , e.description 
+      `SELECT e.id , e.amount , e.date , e.type , e.description 
                                       FROM expenses e
                                       JOIN users u
                                       ON  e.user_id = u.user_id
                                       WHERE u.user_id = ?;`,
-      [userId]
+      [userId],
+      (err) => {
+        if (err) throw err;
+        console.log("User inserted!");
+        connection.end();
+      }
     );
     return results;
   } catch (err) {
@@ -33,9 +44,14 @@ const getAllExpenseForAnUser = async (userId) => {
 const getSingleExpense = async (expenseId) => {
   try {
     const [results] = await pool.query(
-                                         `SELECT * FROM expenses
+      `SELECT * FROM expenses
                                           WHERE id = ?`,
-      [expenseId]
+      [expenseId],
+      (err) => {
+        if (err) throw err;
+        console.log("User inserted!");
+        connection.end();
+      }
     );
     return results[0];
   } catch (err) {
@@ -45,9 +61,15 @@ const getSingleExpense = async (expenseId) => {
 
 const deleteSingleExpense = async (expenseId) => {
   try {
-    const [results] = await pool.query(`DELETE FROM expenses WHERE id = ?`, [
-      expenseId,
-    ]);
+    const [results] = await pool.query(
+      `DELETE FROM expenses WHERE id = ?`,
+      [expenseId],
+      (err) => {
+        if (err) throw err;
+        console.log("User inserted!");
+        connection.end();
+      }
+    );
     return results;
   } catch (err) {
     return err;
@@ -57,10 +79,15 @@ const deleteSingleExpense = async (expenseId) => {
 const updateExpense = async (whatFeildToUpdate, valueToUpdate, expenseId) => {
   try {
     const results = await pool.query(
-                                     `UPDATE expenses
+      `UPDATE expenses
                                       SET ${whatFeildToUpdate} = ? 
                                       WHERE id = ?`,
-      [valueToUpdate, expenseId]
+      [valueToUpdate, expenseId],
+      (err) => {
+        if (err) throw err;
+        console.log("User inserted!");
+        connection.end();
+      }
     );
     return results;
   } catch (err) {
@@ -69,9 +96,8 @@ const updateExpense = async (whatFeildToUpdate, valueToUpdate, expenseId) => {
 };
 
 const searchExpenses = async (input) => {
-  
-    try {
-        const query = `
+  try {
+    const query = `
           SELECT * 
           FROM expenses
           WHERE 
@@ -80,19 +106,27 @@ const searchExpenses = async (input) => {
                OR (DATE_FORMAT(date, '%Y-%m-%d') LIKE CONCAT('%', ?, '%') OR ? IS NULL)
               OR (amount  LIKE CONCAT('%', ?, '%') OR ? IS NULL)
         `;
-    
-        const [results] = await pool.query(query, [
-            input || null,
-            input || null,
-            input || null,
-            input || null,
-            input || null,
-            input || null,
-            input || null,
-            input || null,
-          ]);
-        console.log(results);
-        return results;
+
+    const [results] = await pool.query(
+      query,
+      [
+        input || null,
+        input || null,
+        input || null,
+        input || null,
+        input || null,
+        input || null,
+        input || null,
+        input || null,
+      ],
+      (err) => {
+        if (err) throw err;
+        console.log("User inserted!");
+        connection.end();
+      }
+    );
+    console.log(results);
+    return results;
   } catch (err) {
     return err;
   }
@@ -104,5 +138,5 @@ export {
   getAllExpenseForAnUser,
   deleteSingleExpense,
   updateExpense,
-  searchExpenses
+  searchExpenses,
 };

@@ -14,6 +14,7 @@ const addExpense = async (req,res)=>{
     }
     else{
         const Expense = await addSingleExpense(user_id,amount,date,type,description);
+        console.log(Expense);
         const ExpenseDetail = await getSingleExpense(Expense.insertId)
         res
         .status(201)
