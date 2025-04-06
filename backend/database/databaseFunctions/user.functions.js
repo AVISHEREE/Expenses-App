@@ -29,7 +29,7 @@ const getUser = async (email,password) =>{
   try {
     const [results] = await pool.query(`SELECT user_id,email,mobileNumber,balance,name
                                         FROM test.users 
-                                        WHERE email = '?' AND password = '?'`,
+                                        WHERE email = ? AND password = ?`,
                                         [email,password]);
   
     return results[0];
