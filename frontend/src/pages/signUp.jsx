@@ -1,6 +1,7 @@
 import React , {useState} from "react";
 import Navbar from "../components/navbar.jsx";
-import { Link, useNavigate } from 'react-router-dom';
+// import { Link, useNavigate } from 'react-router-dom';
+import { Link , useNavigate } from "react-router-dom";
 import { lH } from "@/assets/Functions/host.js";
 
 const SignUp = () => {
@@ -38,7 +39,7 @@ const DirectLogin = async (e) => {
   try {
     const response = await fetch(`http://${lH}/v1/user/signin`, {
       method: "POST",
-      body: JSON.stringify({ email:"test@test.com", password:"av@123"}),
+      body: JSON.stringify({ email:"test@abc.com", password:"av@123"}),
       headers: {
         "Content-Type": "application/json",
       },
@@ -96,12 +97,13 @@ const DirectLogin = async (e) => {
           </form>
           <p className="text-center text-sm text-gray-600 mt-4">
             have an account?{" "}
-            <Link
+            {/* <Link
               to={'/login'}
               className="text-blue-500 hover:underline font-medium"
             >
               Login
-            </Link>
+            </Link> */}
+            <a href="/login" className="text-blue-500 hover:underline font-medium">Login</a>
           </p>
           <p className="text-center text-sm text-gray-600 mt-4">
             <button className="text-red-500 underline font-medium" 

@@ -7,19 +7,23 @@ const Table = ({ value }) => {
   const [SearchData, setSearchData] = useState([]);
   const [InputingText, setInputingText] = useState(false);
 
-  const getData = () => {
-    const userExpenses = ExpensesData;
-    console.log(userExpenses);
-    if(!userExpenses){
-      window.location.reload();
+  const getData = async () => {
+    const userExpenses = await ExpensesData;
+    if (!userExpenses || userExpenses.length === 0) {
+      setData([]);
+      setSearchData([]);
+      return;
     }
-      userExpenses.map((items)=>{
-        items.date = moment(items.date).format('DD MMMM, YYYY');
-      })
+  
+    for (let i = 0; i < userExpenses.length; i++) {
+      userExpenses[i].date = moment(userExpenses[i].date).format('DD MMMM, YYYY');
+    }
+  
     setData(userExpenses);
-    setSearchData(userExpenses); // Initialize SearchData
-    
+    setSearchData(userExpenses);
   };
+  
+  
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));

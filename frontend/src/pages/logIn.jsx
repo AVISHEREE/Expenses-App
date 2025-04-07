@@ -21,6 +21,11 @@ const LogIn = () => {
         },
       });
       const data = await response.json();
+      console.log(data);
+      if(data === `${Email} don't exists please signUp`){
+        alert("wrong email");
+        return
+      }
       localStorage.setItem("userInfo",JSON.stringify(data.userDetails));
       localStorage.setItem("accessToken",JSON.stringify(data.accessToken));
       localStorage.setItem("refreshToken",JSON.stringify(data.refreshToken));
@@ -36,7 +41,7 @@ const DirectLogin = async (e) => {
   try {
     const response = await fetch(`http://${lH}/v1/user/signin`, {
       method: "POST",
-      body: JSON.stringify({ email:"test@test.com", password:"av@123"}),
+      body: JSON.stringify({ email:"test@abc.com", password:"av@123"}),
       headers: {
         "Content-Type": "application/json",
       },
@@ -86,12 +91,13 @@ const DirectLogin = async (e) => {
           </form>
           <div className="text-center text-sm text-gray-600 mt-4">
             Don't have an account?{" "}
-           <Link
+            <a href="/signup" className="text-blue-500 hover:underline font-medium">Signup</a>
+           {/* <Link
              to={'/login'}
              className="text-blue-500 hover:underline font-medium"
             >
               Signup
-            </Link>
+            </Link> */}
             <p className="text-center text-sm text-gray-600 mt-4">
               <button className="text-red-500 underline font-medium" 
               onClick={DirectLogin}>

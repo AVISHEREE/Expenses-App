@@ -27,7 +27,6 @@ const getData = async () => {
     }
   );
   const userExpenses = await response.json();
-  console.log(await userExpenses)
   userExpenses.map((items) => {
     items.date = moment(items.date).format("DD MMMM, YYYY");
   });
@@ -45,27 +44,30 @@ const isTokenExpired = (token) => {
   }
 };
 
-const analizeTotalSpending = () => {
+const analizeTotalSpending = async (Data = []) => {
   let amount = 0;
-  
-  if (Array.isArray(Data)) {
-    Data.forEach((item) => {
-      amount += item.amount || 0; // Ensure item.amount is a valid number
-    });
-  }
+
+  // if (!Array.isArray(Data)) {
+  //   console.error("Data is not an array:", Data);
+  //   return 0;
+  // }
+
+  Data.forEach((item) => {
+    amount += item.amount || 0;
+  });
 
   return amount;
 };
 
-const analizeTotalSpedingInOneMonth = () => {
+const analizeTotalSpedingInOneMonth = async () => {
+  await Data
   let amount = 0;
   const today = new Date();
   const monthName = today.toLocaleString("default", { month: "long" });
 
-  if (!Array.isArray(Data)) {
-    console.error("Error: Data is not an array", Data);
-    return 0;
-  }
+  // if (!Array.isArray(Data)) {
+  //   return 0;
+  // }
 
   amount = Data.filter(item => moment(item.date).format("MMMM") === monthName)
               .reduce((total, item) => total + (item.amount || 0), 0);
@@ -75,10 +77,11 @@ const analizeTotalSpedingInOneMonth = () => {
 
 let totalSpending ;
 let totalSpendingInOneMonth ;
-let Data = getData();
+let Data = await getData();
+console.log(Data)
 if(Data){
-   totalSpending = analizeTotalSpending();
-   totalSpendingInOneMonth = analizeTotalSpedingInOneMonth();
+   totalSpending = await analizeTotalSpending(Data);
+   totalSpendingInOneMonth = await analizeTotalSpedingInOneMonth(Data);
 }
 export { totalSpending , totalSpendingInOneMonth , Data };
 

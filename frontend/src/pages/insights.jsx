@@ -5,29 +5,48 @@ import {
 } from "recharts";
 import Navbar from "../components/navbar.jsx";
 import { totalSpending, totalSpendingInOneMonth, Data } from '../assets/Functions/userDataAnylise.js';
-
+console.log(await totalSpending)
+console.log(await totalSpendingInOneMonth);
 const Insights = () => {
   const [data, setData] = useState([]);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
   const COLORS = ["#0088FE", "#FF8042", "#00C49F", "#FFBB28", "#A28DFF"];
 
-  useEffect(() => {
-    setData(Data);
-  
-    const categoryMap = Data.reduce((acc, item) => {
-      console.log(acc)
-      if (!acc[item.type]) {
-        acc[item.type] = 0;
+    const getData = async () => {
+      const userExpenses = await Data;
+      if (!userExpenses || userExpenses.length === 0) {
+        setData([]);
+        return;
       }
-      acc[item.type] += item.amount;
-      return acc;
-    }, {});
+      setData(userExpenses);
+    };
+    
+    
+  
+    useEffect(() => {
+        getData();
+    }, []);
+
+  useEffect(() => {
+    if (!Data || !Array.isArray(Data)) {
+      return;
+    }
+  
+  
+    const categoryMap = {};
+  
+    for (const item of Data) {
+      if (!categoryMap[item.type]) {
+        categoryMap[item.type] = 0;
+      }
+      categoryMap[item.type] += item.amount;
+    }
   
     const formattedCategoryData = Object.keys(categoryMap).map((key, index) => ({
       name: key,
       value: categoryMap[key],
-      fill: COLORS[index % COLORS.length], // Assign colors dynamically
+      fill: COLORS[index % COLORS.length],
     }));
   
     setCategoryData(formattedCategoryData);
@@ -67,7 +86,7 @@ const Insights = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="w-full max-w-3xl bg-white p-4 mb-4 rounded-lg shadow-lg mt-6">
+          {/* <div className="w-full max-w-3xl bg-white p-4 mb-4 rounded-lg shadow-lg mt-6">
             <h2 className="text-lg font-bold mb-4">Total vs This Month's Spending</h2>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -89,7 +108,7 @@ const Insights = () => {
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
-          </div>
+          </div> */}
 
           {/* New Feature: Category-wise Spending */}
           <div className="w-full max-w-3xl bg-white p-4 mb-4 rounded-lg shadow-lg mt-6">
