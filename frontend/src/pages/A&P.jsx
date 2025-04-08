@@ -10,7 +10,7 @@ export default function AboutPage() {
         <div className="p-6 rounded-2xl bg-white shadow-lg mb-6">
             <h2 className="text-2xl font-bold text-heading-color">About the Project</h2>
             <p className="mt-2 text-lg">
-              <span className="font-bold">MoneyFlowControl</span> is a simple and efficient expense tracker that helps users manage their finances effortlessly. 
+              <span className="font-bold">Expense Asist App</span> is a simple and efficient expense tracker that helps users manage their finances effortlessly. 
               It allows tracking expenses while providing a seamless and user-friendly experience.
             </p>
           </div>

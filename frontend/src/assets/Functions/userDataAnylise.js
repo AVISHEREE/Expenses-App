@@ -26,7 +26,11 @@ const getData = async () => {
       },
     }
   );
+  if(user.message){
+    return;
+  }
   const userExpenses = await response.json();
+  console.log(userExpenses);
   userExpenses.map((items) => {
     items.date = moment(items.date).format("DD MMMM, YYYY");
   });
@@ -77,12 +81,17 @@ const analizeTotalSpedingInOneMonth = async () => {
 
 let totalSpending ;
 let totalSpendingInOneMonth ;
-let Data = await getData();
-console.log(Data)
-if(Data){
-   totalSpending = await analizeTotalSpending(Data);
-   totalSpendingInOneMonth = await analizeTotalSpedingInOneMonth(Data);
+let Data;
+async function init() {
+   Data = await getData();
+   if (Data) {
+     totalSpending = await analizeTotalSpending(Data);
+     totalSpendingInOneMonth = await analizeTotalSpedingInOneMonth(Data);
+  }
 }
+
+init();
+
 export { totalSpending , totalSpendingInOneMonth , Data };
 
 

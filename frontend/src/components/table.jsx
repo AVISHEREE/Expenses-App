@@ -6,33 +6,23 @@ const Table = ({ value }) => {
   const [Data, setData] = useState([]);
   const [SearchData, setSearchData] = useState([]);
   const [InputingText, setInputingText] = useState(false);
-
   const getData = async () => {
     const userExpenses = await ExpensesData;
-    if (!userExpenses || userExpenses.length === 0) {
+    if (!userExpenses) {
       setData([]);
       setSearchData([]);
       return;
     }
-  
     for (let i = 0; i < userExpenses.length; i++) {
       userExpenses[i].date = moment(userExpenses[i].date).format('DD MMMM, YYYY');
     }
-  
+    userExpenses
     setData(userExpenses);
     setSearchData(userExpenses);
   };
-  
-  
-
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userInfo"));
-    if (user) {
-      getData();
-    }
-  }, []);
-
-  useEffect(() => {
+    const abc = getData();
+    // console.log(abc);
     if (value === "") {
       setInputingText(false);
       setSearchData(Data); // Reset SearchData to original Data

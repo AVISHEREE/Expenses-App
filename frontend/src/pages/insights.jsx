@@ -4,9 +4,7 @@ import {
   PieChart, Pie, Cell, ResponsiveContainer, Legend
 } from "recharts";
 import Navbar from "../components/navbar.jsx";
-import { totalSpending, totalSpendingInOneMonth, Data } from '../assets/Functions/userDataAnylise.js';
-console.log(await totalSpending)
-console.log(await totalSpendingInOneMonth);
+import { Data } from '../assets/Functions/userDataAnylise.js';
 const Insights = () => {
   const [data, setData] = useState([]);
   const [selectedExpense, setSelectedExpense] = useState(null);

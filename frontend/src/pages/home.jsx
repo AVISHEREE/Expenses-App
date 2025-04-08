@@ -15,9 +15,9 @@ const Home = () => {
   const userMessages = [
     { text: `Hi ${user}! Let's manage expenses`, type: "default" },
     { text:"Tap on expense to see full info", type: "default" },
-    { text: `Total Spending: ${totalSpending}`, type: totalSpending > 1000 ? "warning" : "success" },
+    { text: `Total Spending: ${totalSpending}`, type: totalSpending > 3000 ? "warning" : "success" },
     { text: `Total Expense In This Month: ${totalSpendingInOneMonth}`, type: totalSpendingInOneMonth > 500 ? "alert" : "default" },
-    { text:totalSpendingInOneMonth > 1000 ? "You're spending too much" : "You're doing great this month" , type: totalSpendingInOneMonth > 1000 ? "warning" : "success" },
+    { text:totalSpendingInOneMonth > 2000 ? "You're spending too much" : "You're doing great this month" , type: totalSpendingInOneMonth > 1000 ? "warning" : "success" },
   ];
   // TODO : Create a function for loop 
   useEffect(() => {
