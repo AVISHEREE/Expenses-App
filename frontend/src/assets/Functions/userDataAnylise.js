@@ -2,12 +2,11 @@ import {jwtDecode} from 'jwt-decode';
 import refreshRefreshToken from '@/assets/Functions/refreshAccessToken.js';
 import moment from "moment";
 import { lH } from './host.js';
-// import
 moment.createFromInputFallback = function(config) {
   config._d = new Date(config._i); // Use default Date constructor
 };
 const getData = async () => {
-  const user = JSON.parse(localStorage.getItem("userInfo"));
+  const user = await JSON.parse(localStorage.getItem("userInfo"));
   if(user){
     const userId = user.user_id;
   const token = JSON.parse(localStorage.getItem("accessToken"));
@@ -30,7 +29,9 @@ const getData = async () => {
     return;
   }
   const userExpenses = await response.json();
-  console.log(userExpenses);
+  if(userExpenses.msg == "no expense exists please enter any expenses"){
+    return
+  }
   userExpenses.map((items) => {
     items.date = moment(items.date).format("DD MMMM, YYYY");
   });

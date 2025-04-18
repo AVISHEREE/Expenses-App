@@ -7,7 +7,22 @@ const Table = ({ value }) => {
   const [SearchData, setSearchData] = useState([]);
   const [InputingText, setInputingText] = useState(false);
   const getData = async () => {
-    const userExpenses = await ExpensesData;
+    const user = await JSON.parse(localStorage.getItem("userInfo"));
+  if(user){
+    const userId = user.user_id;
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  const response = await fetch(
+    `http://${lH}/v1/expense/get-all-expenses`,
+    {
+      method: "POST",
+      body: JSON.stringify({ user_id: userId }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+    const userExpenses = await response.json();
     if (!userExpenses) {
       setData([]);
       setSearchData([]);
@@ -16,13 +31,18 @@ const Table = ({ value }) => {
     for (let i = 0; i < userExpenses.length; i++) {
       userExpenses[i].date = moment(userExpenses[i].date).format('DD MMMM, YYYY');
     }
-    userExpenses
     setData(userExpenses);
     setSearchData(userExpenses);
-  };
+  }
+  };  
   useEffect(() => {
-    const abc = getData();
-    // console.log(abc);
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      getData();
+    }
+  }, []);
+  
+  useEffect(() => {
     if (value === "") {
       setInputingText(false);
       setSearchData(Data); // Reset SearchData to original Data
