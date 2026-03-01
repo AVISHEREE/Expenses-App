@@ -1,77 +1,74 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar.jsx";
-import { useNavigate } from 'react-router-dom';
-import { lH } from "@/assets/Functions/host.js";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "@/assets/Functions/host.js";
 
 const LogIn = () => {
   const navigate = useNavigate();
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
-  // const [UserDetails, setUserDetails] = useState([]);
-  // const [AuthTokens, setAuthTokens] = useState([])
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
+  const doLogin = async (email, password) => {
+    setLoading(true);
+    setError("");
     try {
-      const response = await fetch(`http://${lH}/v1/user/signin`, {
+      const response = await fetch(`${BASE_URL}/v1/user/signin`, {
         method: "POST",
-        body: JSON.stringify({ email:Email, password:Password }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        body: JSON.stringify({ email, password }),
+        headers: { "Content-Type": "application/json" },
       });
+
       const data = await response.json();
-      console.log(data);
-      if(data === `${Email} don't exists please signUp`){
-        alert("wrong email");
-        return
+
+      if (!response.ok || !data.userDetails) {
+        setError(data.message || "Invalid email or password.");
+        return;
       }
-      localStorage.setItem("userInfo",JSON.stringify(data.userDetails));
-      localStorage.setItem("accessToken",JSON.stringify(data.accessToken));
-      localStorage.setItem("refreshToken",JSON.stringify(data.refreshToken));
-      console.log("user logedin");
-      navigate('/');
+
+      localStorage.setItem("userInfo", JSON.stringify(data.userDetails));
+      localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
+      localStorage.setItem("refreshToken", JSON.stringify(data.refreshToken));
+      navigate("/");
     } catch (err) {
-      console.log("Error in sending req, ", err);
+      setError("Connection error. Please try again.");
+      console.error("Login error:", err);
+    } finally {
+      setLoading(false);
     }
   };
-const DirectLogin = async (e) => {
-  e.preventDefault();
 
-  try {
-    const response = await fetch(`http://${lH}/v1/user/signin`, {
-      method: "POST",
-      body: JSON.stringify({ email:"test@abc.com", password:"av@123"}),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    console.log(data);
-    localStorage.setItem("userInfo",JSON.stringify(data.userDetails));
-    localStorage.setItem("accessToken",JSON.stringify(data.accessToken));
-    localStorage.setItem("refreshToken",JSON.stringify(data.refreshToken));
-    console.log("user logedin");
-    navigate('/');
-  } catch (err) {
-    console.log("Error in sending req, ", err);
-  }
-};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    doLogin(Email, Password);
+  };
+
+  const DirectLogin = (e) => {
+    e.preventDefault();
+    doLogin("test@abc.com", "av@123");
+  };
+
   return (
     <>
       <Navbar page={{ name: "Create Account", route: "signup" }} />
-      <div className="flex justify-center items-center w-full mt-24 p-4 cursor-custom-pointer">
-        <div className="w-full max-w-md p-6 rounded-lg shadow-lg border border-gray-300 bg-gray-50">
-          <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
-            Login to Continue
-          </h1>
-          <form className="grid gap-5" onSubmit={handleSubmit}>
+      <div className="flex justify-center items-center w-full mt-24 p-4">
+        <div className="w-full max-w-md p-6 rounded-2xl shadow-xl border border-gray-200 bg-white">
+          <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Login to Continue</h1>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm">
+              {error}
+            </div>
+          )}
+
+          <form className="grid gap-4" onSubmit={handleSubmit}>
             <input
               type="email"
-              placeholder="Enter your Email or mobile"
+              placeholder="Enter your Email"
               onChange={(e) => setEmail(e.target.value)}
               value={Email}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
               required
             />
             <input
@@ -79,32 +76,31 @@ const DirectLogin = async (e) => {
               placeholder="Enter your Password"
               onChange={(e) => setPassword(e.target.value)}
               value={Password}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
               required
             />
             <button
               type="submit"
-              className="w-full py-3 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-600 transition duration-200"
+              disabled={loading}
+              className="w-full py-3 bg-indigo-500 text-white font-semibold rounded-xl hover:bg-indigo-600 transition disabled:opacity-50"
             >
-              Log In
+              {loading ? "Logging in..." : "Log In"}
             </button>
           </form>
-          <div className="text-center text-sm text-gray-600 mt-4">
+
+          <p className="text-center text-sm text-gray-600 mt-4">
             Don't have an account?{" "}
-            <a href="/signup" className="text-blue-500 hover:underline font-medium">Signup</a>
-           {/* <Link
-             to={'/login'}
-             className="text-blue-500 hover:underline font-medium"
+            <a href="/signup" className="text-indigo-500 hover:underline font-medium">Sign Up</a>
+          </p>
+          <p className="text-center text-sm text-gray-500 mt-3">
+            <button
+              className="text-red-500 underline font-medium hover:text-red-600 transition"
+              onClick={DirectLogin}
+              disabled={loading}
             >
-              Signup
-            </Link> */}
-            <p className="text-center text-sm text-gray-600 mt-4">
-              <button className="text-red-500 underline font-medium" 
-              onClick={DirectLogin}>
-                go with demo account
-              </button>
-            </p>
-          </div>
+              Try demo account
+            </button>
+          </p>
         </div>
       </div>
     </>

@@ -1,98 +1,94 @@
-import {jwtDecode} from 'jwt-decode';
-import refreshRefreshToken from '@/assets/Functions/refreshAccessToken.js';
-import moment from "moment";
-import { lH } from './host.js';
-moment.createFromInputFallback = function(config) {
-  config._d = new Date(config._i); // Use default Date constructor
-};
-const getData = async () => {
-  const user = await JSON.parse(localStorage.getItem("userInfo"));
-  if(user){
-    const userId = user.user_id;
-  const token = JSON.parse(localStorage.getItem("accessToken"));
-  const isexpire = isTokenExpired(token);
-  if(isexpire){
-    await refreshRefreshToken();
-  }
-  const response = await fetch(
-    `http://${lH}/v1/expense/get-all-expenses`,
-    {
+import { BASE_URL } from "./host.js";
+
+// Fetches all expense data for the logged-in user
+export const getUserExpenses = async () => {
+  try {
+    const user = JSON.parse(localStorage.getItem("userInfo") || "{}");
+    const token = JSON.parse(localStorage.getItem("accessToken") || '""');
+
+    if (!user?.user_id) return [];
+
+    const response = await fetch(`${BASE_URL}/v1/expense/get-all-expenses`, {
       method: "POST",
-      body: JSON.stringify({ user_id: userId }),
+      body: JSON.stringify({ user_id: user.user_id }),
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-    }
-  );
-  if(user.message){
-    return;
+    });
+
+    if (!response.ok) return [];
+
+    const data = await response.json();
+    return Array.isArray(data) ? data : [];
+  } catch (err) {
+    console.error("Error fetching expenses:", err);
+    return [];
   }
-  const userExpenses = await response.json();
-  if(userExpenses.msg == "no expense exists please enter any expenses"){
-    return
-  }
-  userExpenses.map((items) => {
-    items.date = moment(items.date).format("DD MMMM, YYYY");
+};
+
+// Calculates total spending from expense array
+export const calcTotalSpending = (expenses) => {
+  if (!Array.isArray(expenses)) return 0;
+  return expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+};
+
+// Calculates total spending for the current month
+export const calcMonthlySpending = (expenses) => {
+  if (!Array.isArray(expenses)) return 0;
+  const now = new Date();
+  return expenses
+    .filter((item) => {
+      const d = new Date(item.date);
+      return (
+        d.getMonth() === now.getMonth() &&
+        d.getFullYear() === now.getFullYear()
+      );
+    })
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+};
+
+// Calculates spending grouped by month for chart
+export const calcMonthlyTrend = (expenses) => {
+  if (!Array.isArray(expenses)) return [];
+  const map = {};
+  expenses.forEach((item) => {
+    const d = new Date(item.date);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const label = d.toLocaleString("default", { month: "short", year: "2-digit" });
+    if (!map[key]) map[key] = { month: label, total: 0, key };
+    map[key].total += Number(item.amount || 0);
   });
-  return userExpenses;
-  }
-  
-};
-    
-const isTokenExpired = (token) => {
-  try {
-    const decodedToken = jwtDecode(token);
-    return decodedToken.exp * 1000 < Date.now();
-  } catch (error) {
-    return true; // Token is invalid or expired
-  }
+  return Object.values(map).sort((a, b) => a.key.localeCompare(b.key));
 };
 
-const analizeTotalSpending = async (Data = []) => {
-  let amount = 0;
-
-  // if (!Array.isArray(Data)) {
-  //   console.error("Data is not an array:", Data);
-  //   return 0;
-  // }
-
-  Data.forEach((item) => {
-    amount += item.amount || 0;
+// Calculates spending grouped by category
+export const calcCategoryBreakdown = (expenses) => {
+  if (!Array.isArray(expenses)) return [];
+  const map = {};
+  expenses.forEach((item) => {
+    const cat = item.type || "others";
+    map[cat] = (map[cat] || 0) + Number(item.amount || 0);
   });
-
-  return amount;
+  return Object.entries(map)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value);
 };
 
-const analizeTotalSpedingInOneMonth = async () => {
-  await Data
-  let amount = 0;
-  const today = new Date();
-  const monthName = today.toLocaleString("default", { month: "long" });
-
-  // if (!Array.isArray(Data)) {
-  //   return 0;
-  // }
-
-  amount = Data.filter(item => moment(item.date).format("MMMM") === monthName)
-              .reduce((total, item) => total + (item.amount || 0), 0);
-
-  return amount;
+// Calculates top 5 most expensive single expenses
+export const calcTopExpenses = (expenses) => {
+  if (!Array.isArray(expenses)) return [];
+  return [...expenses]
+    .sort((a, b) => Number(b.amount) - Number(a.amount))
+    .slice(0, 5);
 };
 
-let totalSpending ;
-let totalSpendingInOneMonth ;
-let Data;
-async function init() {
-   Data = await getData();
-   if (Data) {
-     totalSpending = await analizeTotalSpending(Data);
-     totalSpendingInOneMonth = await analizeTotalSpedingInOneMonth(Data);
-  }
-}
-
-init();
-
-export { totalSpending , totalSpendingInOneMonth , Data };
-
-
+// Calculates average daily spending (last 30 days)
+export const calcAvgDailySpending = (expenses) => {
+  if (!Array.isArray(expenses) || expenses.length === 0) return 0;
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const recent = expenses.filter((item) => new Date(item.date) >= thirtyDaysAgo);
+  const total = recent.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  return Math.round(total / 30);
+};

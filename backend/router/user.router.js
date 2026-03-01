@@ -8,6 +8,7 @@ router.get('/dashboard',verifyJwtToken,(req,res)=>{
 });
 
 router.route('/signup').post(userSignup);
+    console.log("jo")
 router.route('/signin').post(userSignin);
 router.route('/update-user').put(verifyJwtToken,updateUserDetails);
 router.route('/delete-user').delete(verifyJwtToken,deleteUserFromDb);

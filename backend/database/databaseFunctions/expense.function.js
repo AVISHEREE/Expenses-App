@@ -9,11 +9,9 @@ const addSingleExpense = async (user_id, amount, date, type, description) => {
       [user_id, amount, date, type, description],
       (err) => {
         if (err) throw err;
-        console.log("User inserted!");
         connection.end();
       }
     );
-    console.log(results);
     return results;
   } catch (err) {
     return err;
@@ -31,7 +29,6 @@ const getAllExpenseForAnUser = async (userId) => {
       [userId],
       (err) => {
         if (err) throw err;
-        console.log("User inserted!");
         connection.end();
       }
     );

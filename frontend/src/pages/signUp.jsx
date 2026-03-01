@@ -1,123 +1,138 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar.jsx";
 import { Link, useNavigate } from "react-router-dom";
-import { lH } from "@/assets/Functions/host.js";
+import { BASE_URL } from "@/assets/Functions/host.js";
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [Name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const saveAndRedirect = (data) => {
+    localStorage.setItem("userInfo", JSON.stringify(data.userDetails));
+    localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
+    localStorage.setItem("refreshToken", JSON.stringify(data.refreshToken));
+    navigate("/");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
     try {
-      const response = await fetch(`http://${lH}/v1/user/signup`, {
+      const response = await fetch(`${BASE_URL}/v1/user/signup`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: Email, password: Password, name: Name }),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Signup failed");
-      }
-
-      localStorage.setItem("userInfo", JSON.stringify(data.userDetails));
-      localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
-      localStorage.setItem("refreshToken", JSON.stringify(data.refreshToken));
-
-      console.log("User signed up");
-      navigate('/');
+      if (!response.ok) throw new Error(data.message || "Signup failed");
+      saveAndRedirect(data);
     } catch (err) {
-      console.error("Error during signup:", err.message);
-      alert("Signup failed: " + err.message);
+      setError(err.message || "Signup failed. Please try again.");
+      console.error("Signup error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const DirectLogin = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch(`http://${lH}/v1/user/signin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: "test@abc.com", password: "av@123" }),
-      });
+    setLoading(true);
+    setError("");
+    let attempts = 0;
 
-      const data = await response.json();
+    const tryLogin = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/v1/user/signin`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: "test@abc.com", password: "av@123" }),
+        });
 
-      if (data.userDetails?.message === "Can't add new command when connection is in closed state") {
-        console.warn("Retrying DirectLogin due to DB connection issue...");
-        setTimeout(() => DirectLogin(e), 1000); // Wait 1 second before retrying
-        return;
+        const data = await response.json();
+
+        // Retry on DB connection issue
+        if (data.userDetails?.message?.includes("connection") && attempts < 3) {
+          attempts++;
+          setTimeout(tryLogin, 1200);
+          return;
+        }
+
+        if (!data.userDetails) throw new Error("Demo login failed");
+        saveAndRedirect(data);
+      } catch (err) {
+        setError("Demo login failed. Please try again.");
+        console.error("Demo login error:", err);
+        setLoading(false);
       }
+    };
 
-      localStorage.setItem("userInfo", JSON.stringify(data.userDetails));
-      localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
-      localStorage.setItem("refreshToken", JSON.stringify(data.refreshToken));
-
-      console.log("Demo user logged in");
-      navigate('/');
-    } catch (err) {
-      console.error("Error during demo login:", err.message);
-      alert("Demo login failed: " + err.message);
-    }
+    tryLogin();
   };
 
   return (
     <>
-      <Navbar page={{ name: 'already have Account', route: 'login' }} />
-      <div className="flex justify-center items-center w-full mt-24 p-4 cursor-custom-pointer">
-        <div className="w-full max-w-md p-6 rounded-lg shadow-lg border border-gray-300 bg-gray-50">
-          <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
-            SignUp to Continue
-          </h1>
-          <form className="grid gap-5" onSubmit={handleSubmit}>
+      <Navbar page={{ name: "Already have an account?", route: "login" }} />
+      <div className="flex justify-center items-center w-full mt-24 p-4">
+        <div className="w-full max-w-md p-6 rounded-2xl shadow-xl border border-gray-200 bg-white">
+          <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Create Your Account</h1>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm">
+              {error}
+            </div>
+          )}
+
+          <form className="grid gap-4" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Your Name"
+              onChange={(e) => setName(e.target.value)}
+              value={Name}
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              required
+            />
             <input
               type="email"
-              placeholder="Enter your Email"
+              placeholder="Email Address"
               onChange={(e) => setEmail(e.target.value)}
               value={Email}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
               required
             />
             <input
               type="password"
-              placeholder="Enter your Password"
+              placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
               value={Password}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-            <input
-              type="text"
-              placeholder="Enter your Name"
-              onChange={(e) => setName(e.target.value)}
-              value={Name}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
               required
             />
             <button
               type="submit"
-              className="w-full py-3 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-600 transition duration-200"
+              disabled={loading}
+              className="w-full py-3 bg-indigo-500 text-white font-semibold rounded-xl hover:bg-indigo-600 transition disabled:opacity-50"
             >
-              Sign Up
+              {loading ? "Creating account..." : "Sign Up"}
             </button>
           </form>
+
           <p className="text-center text-sm text-gray-600 mt-4">
-            Have an account?{" "}
-            <Link to="/login" className="text-blue-500 hover:underline font-medium">
-              Login
-            </Link>
+            Already have an account?{" "}
+            <Link to="/login" className="text-indigo-500 hover:underline font-medium">Login</Link>
           </p>
-          <p className="text-center text-sm text-gray-600 mt-4">
-            <button className="text-red-500 underline font-medium" onClick={DirectLogin}>
-              Go with demo account
+          <p className="text-center text-sm text-gray-500 mt-3">
+            <button
+              className="text-red-500 underline font-medium hover:text-red-600 transition"
+              onClick={DirectLogin}
+              disabled={loading}
+            >
+              Try demo account
             </button>
           </p>
         </div>
