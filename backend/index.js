@@ -14,14 +14,7 @@ app.use(express.json());
 
 // BUG FIX #6: cors() with no config allows all origins — fine for dev,
 // but add your Vercel URL here for production security.
-app.use(cors({
-    origin: [
-        process.env.FRONTEND_URL || '*',   // set FRONTEND_URL=https://your-app.vercel.app in .env
-        'http://localhost:5173',
-        'http://localhost:3000',
-    ],
-    credentials: true,
-}));
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.send("Expense App API is running ✅");
@@ -34,4 +27,4 @@ app.post('/v1/refresh', refreshRefreshToken);
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`✅ Server listening on port ${PORT}`);
-});
+});cd
